@@ -100,7 +100,7 @@ Out of scope for the MVP (later phases): Notification, Incident Report, Trip His
 
 Work on the domain model and upload the image to the repository, or link it from a tool such as LucidChart or Draw.io. It is suggested to upload it directly to the repository's **Wiki**.
 
-*Link: [pending]*
+*Link: [MER PupiGo](/Challenges/01/Diagrams/eRPupiGo.pdf)*
 
 ## How to Run
 
