@@ -125,8 +125,8 @@ Work on the domain model and upload the image to the repository, or link it from
 
 This project is managed using **GitHub Projects (Kanban)** and **Backlog**, following the **MoSCoW** prioritization method (Must have, Should have, Could have, Won't have) for the user stories in each sprint.
 
-*Kanban board: [pending]*
-*Backlog: [pending]*
+*[Priority board](https://github.com/users/migueCOLORADO/projects/4/views/2)* <br>
+*[Backlog](https://github.com/users/migueCOLORADO/projects/4/views/1)*
 
 ## Authors
 
