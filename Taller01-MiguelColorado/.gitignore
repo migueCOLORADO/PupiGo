@@ -14,3 +14,5 @@ staticfiles/
 
 # Config local sensible
 .env
+
+Claude.md

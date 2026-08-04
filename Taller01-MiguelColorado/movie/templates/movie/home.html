@@ -1,0 +1,71 @@
+{% extends "movie/base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="hero" id="hero">
+    {% for movie in hero_movies %}
+    <div class="hero-slide {% if forloop.first %}active{% endif %}"
+         style="background-image: url('{{ movie.poster|default:'https://placehold.co/1600x900?text=Sin+poster' }}')"></div>
+    {% endfor %}
+    <div class="hero-overlay"></div>
+
+    {% for movie in hero_movies %}
+    <div class="hero-content {% if forloop.first %}active{% endif %}">
+        <p class="eyebrow">Destacada</p>
+        <h1>{{ movie.title }}</h1>
+        <p class="hero-synopsis">{{ movie.synopsis|truncatewords:25 }}</p>
+        <div class="hero-actions">
+            <a class="btn btn-primary" href="{% url 'movie_detail' movie.pk %}">Reseñar</a>
+            <a class="btn btn-secondary" href="{% url 'movie_detail' movie.pk %}">Más información</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="hero-content active">
+        <h1>Ureview</h1>
+        <p>Taller de {{ student_name }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="rows-container">
+    <section class="carousel-row">
+        <h2 class="carousel-title">Destacadas</h2>
+        <div class="carousel-track">
+            {% for movie in featured_movies %}
+            {% include "movie/_movie_card.html" %}
+            {% empty %}
+            <p class="empty-state">No hay películas todavía.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% for genre, titles in genre_rows %}
+    <section class="carousel-row">
+        <h2 class="carousel-title">{{ genre }}</h2>
+        <div class="carousel-track">
+            {% for movie in titles %}
+            {% include "movie/_movie_card.html" %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if hero_movies|length > 1 %}
+<script>
+    (function () {
+        const slides = document.querySelectorAll('.hero-slide');
+        const contents = document.querySelectorAll('.hero-content');
+        let current = 0;
+        setInterval(() => {
+            slides[current].classList.remove('active');
+            contents[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+            contents[current].classList.add('active');
+        }, 6500);
+    })();
+</script>
+{% endif %}
+{% endblock %}

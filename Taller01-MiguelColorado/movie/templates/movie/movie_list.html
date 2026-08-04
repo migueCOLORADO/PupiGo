@@ -1,0 +1,25 @@
+{% extends "movie/base.html" %}
+{% block title %}Movies{% endblock %}
+{% block content %}
+{% include "movie/subnav.html" %}
+<div class="rows-container">
+    {% for genre, movies in rows %}
+    <section class="carousel-row">
+        <h2 class="carousel-title">{{ genre }}</h2>
+        <div class="carousel-track">
+            {% for movie in movies %}
+            {% include "movie/_movie_card.html" %}
+            {% endfor %}
+        </div>
+    </section>
+    {% empty %}
+    <div class="empty-genre">
+        {% if selected_genre %}
+        <p>Por ahora no tenemos títulos en este género. ¡Vuelve pronto!</p>
+        {% else %}
+        <p>No hay películas todavía.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
