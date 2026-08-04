@@ -8,5 +8,39 @@
 <body>
     <h1>Hello World</h1>
     <h2>Welcome to the home page, {{ name }}!</h2>
+
+    <div class="container">
+    <h1>Movie Reviews</h1>
+    <p>Welcome {{ name }}</p>
+
+    <form action="" method="GET">
+        <div class="mb-3">
+            <label for="searchMovie" class="form-label">
+                Search for Movie:
+            </label>
+            <input type="text" class="form-control" name="searchMovie" value="{{ searchTerm }}"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <p>Searching for {{ searchTerm }}</p>
+
+    {% for movie in movies %}
+        <h2>{{ movie.title }}</h2>
+        <h4>{{ movie.description }}</h4>
+
+        <img src="{{ movie.image.url }}" width="200">
+
+        {% if movie.url %}
+            <p>
+                <a href="{{ movie.url }}">Movie Link</a>
+            </p>
+        {% endif %}
+
+        <br>
+    {% endfor %}
+</div>
+
 </body>
 </html>
+
