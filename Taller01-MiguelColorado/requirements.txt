@@ -1,5 +1,11 @@
-asgiref==3.12.1
+# Instalar con: pip install -r requirements.txt
+# Actualizado: 2026-08-04
+
+# Dependencias directas
 Django==6.0.7
 pillow==12.3.0
+
+# Dependencias transitivas (instaladas automáticamente por Django/Pillow)
+asgiref==3.12.1
 sqlparse==0.5.5
 tzdata==2026.3
