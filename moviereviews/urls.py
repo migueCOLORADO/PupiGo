@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', movieViews.home),
     path('about/', movieViews.about),
+    path('statistics/', movieViews.statistics_view),
     path('news/', include('news.urls')),
 ]
 
