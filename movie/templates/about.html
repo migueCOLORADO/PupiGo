@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>About</title>
-</head>
-<body>
-    <h1>Welcome to About Page</h1>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <h1>Acerca de</h1>
+    <p>
+        Movie Reviews es un proyecto del curso de Proyecto Integrador donde se
+        practican los conceptos de frontend y bases de datos con Django y Bootstrap.
+    </p>
+</div>
+{% endblock %}
