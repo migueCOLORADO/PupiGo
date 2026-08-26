@@ -141,3 +141,9 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Python / Django (Taller 2)
+__pycache__/
+*.py[cod]
+db.sqlite3
+media/
