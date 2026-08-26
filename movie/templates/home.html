@@ -58,6 +58,14 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ movie.title }}</h5>
                             <p class="card-text">{{ movie.description }}</p>
+                            <p class="card-text">
+                                {% if movie.genre %}
+                                    <span class="badge bg-secondary">{{ movie.genre }}</span>
+                                {% endif %}
+                                {% if movie.year %}
+                                    <span class="badge bg-info text-dark">{{ movie.year }}</span>
+                                {% endif %}
+                            </p>
                         </div>
                         {% if movie.url %}
                             <div class="card-footer bg-white border-0">
