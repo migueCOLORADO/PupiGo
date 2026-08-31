@@ -47,3 +47,6 @@ dist/
 # Coverage
 .coverage
 htmlcov/
+
+# Large datasets
+*.csv
