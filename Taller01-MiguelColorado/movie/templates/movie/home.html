@@ -49,6 +49,40 @@
     </section>
     {% endfor %}
 </div>
+
+<div class="container py-4">
+    <h2 class="mb-4" style="color: var(--text-light);">Catálogo completo</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for movie in movies %}
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ movie.poster|default:'https://placehold.co/300x450?text=Sin+poster' }}" class="card-img-top" alt="{{ movie.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <p class="card-text">{{ movie.synopsis|truncatewords:20 }}</p>
+                    <p class="card-text"><small class="text-muted">{{ movie.genre }} &middot; {{ movie.release_year }}</small></p>
+                    {% if movie.pk %}
+                    <a href="{% url 'movie_detail' movie.pk %}" class="btn btn-primary btn-sm">Ver detalle</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="container py-4">
+    <h3 style="color: var(--text-light);">Join our mailing list</h3>
+    <form action="{% url 'signup' %}" method="get" class="row g-2 align-items-end" style="max-width: 420px;">
+        <div class="col mb-3">
+            <label for="mailingEmail" class="form-label" style="color: var(--text-muted);">Email</label>
+            <input type="email" class="form-control" id="mailingEmail" name="email" required>
+        </div>
+        <div class="col-auto mb-3">
+            <button type="submit" class="btn btn-primary">Join</button>
+        </div>
+    </form>
+</div>
 {% endblock %}
 
 {% block extra_js %}

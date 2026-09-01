@@ -1,3 +1,11 @@
+import base64
+import io
+from collections import Counter
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -37,6 +45,7 @@ def home(request):
         "featured_movies": top_rated,
         "hero_movies": top_rated[:4],
         "genre_rows": genre_rows,
+        "movies": all_titles.order_by("title"),
     })
 
 
@@ -119,6 +128,49 @@ def add_review(request, pk):
         comment=request.POST.get("comment", ""),
     )
     return redirect("movie_detail", pk=pk)
+
+
+def _chart_to_base64(fig):
+    buffer = io.BytesIO()
+    fig.savefig(buffer, format="png", bbox_inches="tight")
+    plt.close(fig)
+    buffer.seek(0)
+    return base64.b64encode(buffer.read()).decode("utf-8")
+
+
+def statistics_view(request):
+    movies = Movie.objects.all()
+
+    year_counts = Counter(m.release_year for m in movies if m.release_year)
+    years = sorted(year_counts)
+    fig1, ax1 = plt.subplots()
+    ax1.bar(years, [year_counts[y] for y in years], color="#d97f3d")
+    ax1.set_xlabel("Año")
+    ax1.set_ylabel("Cantidad de películas")
+    ax1.set_title("Películas por año")
+    graphic = _chart_to_base64(fig1)
+
+    genre_counts = Counter(
+        m.genre.split(",")[0].strip() for m in movies if m.genre
+    )
+    genres = sorted(genre_counts, key=lambda g: genre_counts[g], reverse=True)
+    fig2, ax2 = plt.subplots(figsize=(8, 5))
+    ax2.bar(genres, [genre_counts[g] for g in genres], color="#142521")
+    ax2.set_xlabel("Género")
+    ax2.set_ylabel("Cantidad de películas")
+    ax2.set_title("Películas por género")
+    plt.setp(ax2.get_xticklabels(), rotation=45, ha="right")
+    graphic_genre = _chart_to_base64(fig2)
+
+    return render(request, "statistics.html", {
+        "graphic": graphic,
+        "graphic_genre": graphic_genre,
+    })
+
+
+def signup(request):
+    email = request.GET.get("email")
+    return render(request, "signup.html", {"email": email})
 
 
 def search(request):

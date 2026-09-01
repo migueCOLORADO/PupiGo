@@ -20,10 +20,15 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from movie import views as movie_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='movie/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('news/', include('news.urls')),
+    path('statistics/', movie_views.statistics_view, name='statistics'),
+    path('signup/', movie_views.signup, name='signup'),
     path('', include('movie.urls')),
 ]
 
