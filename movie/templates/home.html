@@ -10,7 +10,7 @@
     <title>Hello World</title>
 </head>
 <body>
-    <div class="container">
+
     <h1>Movie Reviews</h1>
     <p>Welcome {{ name }}</p>
 
@@ -61,7 +61,17 @@
     {% endfor %}
 
 </div>
+<br>
+    <br>
 
+    <h2>Join our mailing list:</h2>
+<form action="{% url 'signup' %}">
+    <div class="mb-3">
+        <label for="email" class="form-label"> Enter your email: </label>
+        <input type="email" class="form-control" name="email" />
+    </div>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+</form>
 </div>
 
 </body>
