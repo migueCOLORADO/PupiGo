@@ -42,6 +42,21 @@ h1, h2, h3 {
     color: var(--text-muted) !important;
 }
 
+.news-card .row {
+    min-height: 140px;
+}
+
+.news-card-accent {
+    background-color: var(--accent);
+    min-height: 100px;
+}
+
+@media (max-width: 767px) {
+    .news-card-accent {
+        min-height: 8px;
+    }
+}
+
 nav {
     position: fixed;
     top: 0;
@@ -448,6 +463,14 @@ main {
 
 .carousel-row {
     margin-bottom: -100px;
+}
+
+.carousel-row.catalog-section {
+    margin-bottom: 2rem;
+}
+
+.catalog-grid {
+    padding: 0 2rem;
 }
 
 .carousel-title {

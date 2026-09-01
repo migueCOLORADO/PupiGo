@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "django-dev",
-      "runtimeExecutable": "Taller01-MiguelColorado/venv/Scripts/python.exe",
-      "runtimeArgs": ["Taller01-MiguelColorado/manage.py", "runserver", "8010"],
+      "runtimeExecutable": "Talleres-MiguelColorado/venv/Scripts/python.exe",
+      "runtimeArgs": ["Talleres-MiguelColorado/manage.py", "runserver", "8010"],
       "port": 8010
     }
   ]

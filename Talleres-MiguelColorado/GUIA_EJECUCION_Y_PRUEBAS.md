@@ -2,7 +2,7 @@
 
 ## 1. Ejecución local desde cero (Windows / PowerShell)
 
-Ejecutar desde la carpeta `Taller01-MiguelColorado`.
+Ejecutar desde la carpeta `Talleres-MiguelColorado`.
 
 ```powershell
 # 1. Crear y activar el entorno virtual (si venv/ no existe)

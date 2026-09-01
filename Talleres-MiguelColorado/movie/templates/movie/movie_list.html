@@ -4,11 +4,11 @@
 {% include "movie/subnav.html" %}
 <div class="rows-container">
     {% for genre, movies in rows %}
-    <section class="carousel-row">
+    <section class="carousel-row catalog-section">
         <h2 class="carousel-title">{{ genre }}</h2>
-        <div class="carousel-track">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 catalog-grid">
             {% for movie in movies %}
-            {% include "movie/_movie_card.html" %}
+            <div class="col">{% include "movie/_movie_card.html" %}</div>
             {% endfor %}
         </div>
     </section>
