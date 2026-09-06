@@ -133,7 +133,6 @@ This project is managed using **GitHub Projects (Kanban)** and **Backlog**, foll
 **Miguel Ángel Colorado Castaño** <br>
 **Juan Diego Muñoz Buitrago** <br>
 **Daniel Mauricio Giraldo Moreno** <br>
-**Juan Jose Velez Garcia** <br>
 **Julian Peña Ochoa** <br>
 **Samuel Montoya Espinosa**
 
