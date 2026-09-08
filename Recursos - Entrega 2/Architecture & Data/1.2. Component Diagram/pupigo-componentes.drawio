@@ -1,0 +1,108 @@
+<mxfile host="app.diagrams.net" modified="2026-09-08" agent="PupiGo" version="24.0.0">
+  <diagram id="pupigo-componentes" name="PupiGo - Componentes">
+    <mxGraphModel dx="1024" dy="720" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+    
+        <!-- Titulo -->
+        <mxCell id="title" value="PupiGo - Diagrama de Componentes (UML) - Vista de Implementacion" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="700" height="30" as="geometry" />
+        </mxCell>
+    
+        <!-- Frontera del sistema PupiGo (subsistema Django) -->
+        <mxCell id="boundary" value="Sistema PupiGo (aplicacion Django)" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;strokeColor=#6c8ebf;verticalAlign=top;fontStyle=2;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="700" height="620" as="geometry" />
+        </mxCell>
+    
+        <!-- Cliente Web / UI -->
+        <mxCell id="ui" value="&lt;&lt;component&gt;&gt;&#10;Cliente Web / UI&#10;(templates Django + Bootstrap + mapa)" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" vertex="1" parent="1">
+          <mxGeometry x="290" y="90" width="220" height="70" as="geometry" />
+        </mxCell>
+    
+        <!-- Autenticacion -->
+        <mxCell id="auth" value="&lt;&lt;component&gt;&gt;&#10;Autenticacion / Usuarios" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="230" width="180" height="60" as="geometry" />
+        </mxCell>
+    
+        <!-- Tracking -->
+        <mxCell id="track" value="&lt;&lt;component&gt;&gt;&#10;Tracking en Tiempo Real&#10;(posicion bus, ETA)" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="230" width="180" height="60" as="geometry" />
+        </mxCell>
+    
+        <!-- Notificaciones -->
+        <mxCell id="notif" value="&lt;&lt;component&gt;&gt;&#10;Notificaciones / Incidentes" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" vertex="1" parent="1">
+          <mxGeometry x="540" y="230" width="170" height="60" as="geometry" />
+        </mxCell>
+    
+        <!-- Reservas + QR -->
+        <mxCell id="reserv" value="&lt;&lt;component&gt;&gt;&#10;Reservas + QR" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="350" width="180" height="60" as="geometry" />
+        </mxCell>
+    
+        <!-- Panel Admin -->
+        <mxCell id="admin" value="&lt;&lt;component&gt;&gt;&#10;Panel de Administracion" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" vertex="1" parent="1">
+          <mxGeometry x="540" y="350" width="170" height="60" as="geometry" />
+        </mxCell>
+    
+        <!-- Capa de Datos / ORM -->
+        <mxCell id="data" value="&lt;&lt;component&gt;&gt;&#10;Capa de Datos / ORM (Django ORM)" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#d5e8d4;strokeColor=#82b366;align=center;" vertex="1" parent="1">
+          <mxGeometry x="290" y="470" width="220" height="60" as="geometry" />
+        </mxCell>
+    
+        <!-- Base de Datos -->
+        <mxCell id="db" value="PostgreSQL&#10;(Base de Datos)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="330" y="580" width="140" height="80" as="geometry" />
+        </mxCell>
+    
+        <!-- ===== INTEGRACIONES EXTERNAS (resaltadas) ===== -->
+        <mxCell id="maps" value="&lt;&lt;external&gt;&gt; &lt;&lt;component&gt;&gt;&#10;API de Mapas / Geolocalizacion&#10;(mapa, ruta, ETA)" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="90" width="220" height="70" as="geometry" />
+        </mxCell>
+    
+        <mxCell id="gps" value="&lt;&lt;external&gt;&gt; &lt;&lt;component&gt;&gt;&#10;Fuente de ubicacion del bus / GPS&#10;(dispositivo o API)" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="230" width="220" height="70" as="geometry" />
+        </mxCell>
+    
+        <mxCell id="push" value="&lt;&lt;external&gt;&gt; &lt;&lt;component&gt;&gt;&#10;Servicio de Notificaciones&#10;(push / email)" style="shape=component;html=1;whiteSpace=wrap;jettyWidth=8;jettyHeight=4;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="350" width="220" height="70" as="geometry" />
+        </mxCell>
+    
+        <!-- ===== Interfaces provistas clave (lollipop) ===== -->
+        <mxCell id="iauth" value="IAuth" style="shape=providedRequiredInterface;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="152" y="212" width="16" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="idata" value="IPersistencia" style="shape=providedRequiredInterface;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="392" y="452" width="16" height="16" as="geometry" />
+        </mxCell>
+    
+        <!-- ===== Dependencias internas (flechas punteadas) ===== -->
+        <mxCell id="e1" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="ui" target="auth"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="ui" target="track"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="ui" target="notif"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="ui" target="reserv"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="ui" target="admin"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="auth" target="data"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="track" target="data"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="notif" target="data"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="reserv" target="data"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e10" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="reserv" target="auth"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e11" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="admin" target="data"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e12" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="admin" target="track"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e13" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="notif" target="track"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e14" value="«use»" style="endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;" edge="1" parent="1" source="data" target="db"><mxGeometry relative="1" as="geometry" /></mxCell>
+    
+        <!-- ===== Dependencias hacia integraciones externas (resaltadas, naranja) ===== -->
+        <mxCell id="x1" value="«use» HTTP/API mapas" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#d79b00;strokeWidth=2;fontColor=#d79b00;fontSize=10;" edge="1" parent="1" source="ui" target="maps"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="x2" value="«use» geocoding/ETA" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#d79b00;strokeWidth=2;fontColor=#d79b00;fontSize=10;" edge="1" parent="1" source="track" target="maps"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="x3" value="«use» posicion bus" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#d79b00;strokeWidth=2;fontColor=#d79b00;fontSize=10;" edge="1" parent="1" source="track" target="gps"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="x4" value="«use» push/email" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#d79b00;strokeWidth=2;fontColor=#d79b00;fontSize=10;" edge="1" parent="1" source="notif" target="push"><mxGeometry relative="1" as="geometry" /></mxCell>
+    
+        <!-- Leyenda -->
+        <mxCell id="legend" value="LEYENDA&#10;Azul = modulo de aplicacion (Django)   Verde = persistencia   Naranja = integracion externa (punto de integracion)&#10;Flecha punteada = dependencia «use»   Lollipop = interfaz provista" style="text;html=1;align=left;verticalAlign=middle;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;spacing=6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="700" width="1000" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
