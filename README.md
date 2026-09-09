@@ -100,26 +100,91 @@ Out of scope for the MVP (later phases): Notification, Incident Report, Trip His
 
 Work on the domain model and upload the image to the repository, or link it from a tool such as LucidChart or Draw.io. It is suggested to upload it directly to the repository's **Wiki**.
 
-*Link: [Domain Model PupiGo](/Challenges/01/Diagrams/domainDPupiGo.pdf)*
+*Link: [Domain Model PupiGo](https://github.com/migueCOLORADO/PupiGo/blob/Sprint-1/Diagrams/domainDPupiGo.pdf) (Sprint-1 branch)*
 
 ## How to Run
 
-*(Section to be completed once the technical setup is defined — dependency installation instructions, environment variables, and how to run the project in Django)*
+Backend Django + DRF and frontend React + Tailwind, faithful to the interactive mockup `pupigo-mockup.html`.
 
 ### Requirements
-- **Programming Language:** Python
-- **Framework:** Django
-- **Tools:** *(pending)*
+- Python 3.13 (used in development; 3.11+ should work)
+- Node 18+
+- An active venv at the repo root (`../venv` relative to `backend/` or `frontend/`)
 
-### Installation
-```
-# pending
+### Backend — macOS / Linux / Git Bash
+
+```bash
+cd backend
+source ../venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py seed
+python manage.py createsuperuser   # first time only
+python manage.py runserver 8000
 ```
 
-### Execution
+### Backend — Windows (PowerShell/CMD)
+
+`&&` doesn't work as a separator in PowerShell/CMD — run each line separately:
+
+```powershell
+cd backend
+..\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py seed
+python manage.py createsuperuser
+python manage.py runserver 8000
 ```
-# pending
+
+### Frontend (any OS)
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
+
+- Student view: `http://localhost:5173/`
+- Driver view: `http://localhost:5173/conductor` (requires granting geolocation; works on `localhost` without HTTPS on Chrome)
+- Admin: `http://localhost:8000/admin/`
+
+### Troubleshooting
+
+**`["Faltan datos base (route, vehicle, driver). Ejecuta: manage.py seed"]`**
+`python manage.py seed` wasn't run after `migrate`. Run it and refresh.
+
+**`Fatal Python error: init_import_site` on `runserver`**
+The venv isn't activated — Django is running on the system's global Python, which may have conflicting packages (e.g. `pip-system-certs`). Activate the venv (steps above) before any `manage.py` command.
+
+**Driver panel unresponsive / geolocation rejected**
+The browser must have location permission granted for `localhost`. Check the lock/location icon in the address bar if it was blocked by mistake.
+
+### API
+
+| Method | Route | UH / RF |
+|---|---|---|
+| POST | `/api/trips/` `{direction: ida\|vuelta}` | creates trip in **Waiting** (RF-04) |
+| POST | `/api/trips/{id}/start/` | **In progress** (RF-05) |
+| POST | `/api/trips/{id}/complete/` | **Completed** (RF-19) |
+| POST | `/api/trips/{id}/cancel/` | **Cancelled** from waiting or in-progress (RF-19b, UH8) |
+| POST | `/api/trips/{id}/positions/` `{lat,lng,timestamp}` | GPS reading, in-progress only (RF-06, UH3) |
+| GET | `/api/trips/active/` | active trip + `last_position`, or `null` (RF-06/07, UH2) |
+
+Invalid transitions respond `409`. Only one active trip can exist at a time.
+
+### Decisions
+
+- **HTTP polling every 5 s** (`useActiveTrip`) instead of WebSockets: a single collective and a fixed route don't justify Django Channels; comfortably meets the 15 s NFR.
+- **GPS submission** (`useDriverGps`): `watchPosition` + a 5 s heartbeat while the trip is in progress, so there's a reading even if the bus is stopped. Permission rejection shows an explicit warning and no sharing is attempted (UH5).
+- **Position on the illustrated map**: the GPS point is projected onto the Aguacatala→Las Hermosas segment (0..1 progress) and placed on the route's SVG `path` via `getPointAtLength`. ViewBox coordinates are converted to container px with `getScreenCTM`, so markers respect the `slice` crop at any size.
+- **Mockup CSS ported 1:1** into `frontend/src/index.css` (tokens and components); Tailwind handles the responsive layout and new utilities. Breakpoints: `<768` mobile (bottom sheet), `768–1023` tablet (map on top, bar below), `≥1024` desktop (74% / 26%).
+- Route coordinates are seeded in `backend/tracking/management/commands/seed.py` (adjust once the real points are refined).
+
+### Pending documentation
+
+- CORS setup between backend (`:8000`) and frontend (`:5173`) — confirm `django-cors-headers` is in `requirements.txt` and which origins are whitelisted.
+- Environment variables / `.env` if `SECRET_KEY` or other sensitive values aren't hardcoded in `settings.py`.
 
 ## Project Management
 
