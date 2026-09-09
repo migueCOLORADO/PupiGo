@@ -106,6 +106,17 @@ Work on the domain model and upload the image to the repository, or link it from
 
 Backend Django + DRF and frontend React + Tailwind, faithful to the interactive mockup `pupigo-mockup.html`.
 
+### Repository Structure
+
+The app lives at the repo root on `main`; sprint deliverables and resources (diagrams, mockups, documentation) live in their own sprint branches, not on `main`:
+
+```
+main            backend/, frontend/, pupigo-mockup.html, CONTEXT_v1_Sprint2.md   (application code)
+Sprint-1        Diagrams/, Imgs/, Mockups/, Product Vision/                       (Sprint 1 deliverables)
+Sprint-2        Sprint-2-Resources/Architecture-Data/{Deployment-Diagram,Component-Diagram,Data-Model}/
+                Sprint-2-Resources/Mockups/                                       (Sprint 2 deliverables)
+```
+
 ### Requirements
 - Python 3.13 (used in development; 3.11+ should work)
 - Node 18+
@@ -183,8 +194,9 @@ Invalid transitions respond `409`. Only one active trip can exist at a time.
 
 ### Pending documentation
 
-- CORS setup between backend (`:8000`) and frontend (`:5173`) — confirm `django-cors-headers` is in `requirements.txt` and which origins are whitelisted.
-- Environment variables / `.env` if `SECRET_KEY` or other sensitive values aren't hardcoded in `settings.py`.
+- Environment variables / `.env` for production: `SECRET_KEY` and `DJANGO_DEBUG` are currently read from the environment with dev-only defaults in `settings.py` — document real values before deploying.
+
+CORS between backend (`:8000`) and frontend (`:5173`) is already handled: `django-cors-headers` is in `requirements.txt`, installed in `INSTALLED_APPS`/`MIDDLEWARE`, with `CORS_ALLOW_ALL_ORIGINS = True` for local development.
 
 ## Project Management
 
