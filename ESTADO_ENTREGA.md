@@ -38,3 +38,5 @@ su acceso antes de enviar el enlace en https://forms.gle/BFvZSuuoKKHP4k8b6.
 
 El código está preparado en una copia Git de la rama individual. Un commit local
 no implica que se haya publicado en GitHub. No se ha enviado el formulario.
+
+Actualización: código y evidencias publicados en GitHub en la rama Samuel-Montoya-Talleres-PI. Se conservó la actualización remota de la captura del Taller 2. Siguen pendientes el video público, el envío del formulario y la carpeta de imágenes docente.
