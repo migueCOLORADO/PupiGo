@@ -8,6 +8,21 @@ import matplotlib.pyplot as plt
 
 from django.shortcuts import render
 from .models import Movie
+from .forms import RecommendationForm
+from .ai import AIError, recommend, current_embedding
+
+
+def recommendations(request):
+    form = RecommendationForm(request.POST if request.method == 'POST' else None)
+    context = {'form': form, 'ready': sum(current_embedding(m) for m in Movie.objects.all()),
+               'total': Movie.objects.count()}
+    if request.method == 'POST' and form.is_valid():
+        try:
+            movie, score = recommend(form.cleaned_data['prompt'])
+            context.update({'recommended': movie, 'score': f'{score:.4f}'})
+        except AIError as exc:
+            context['error'] = str(exc)
+    return render(request, 'recommendations.html', context)
 
 
 def home(request):

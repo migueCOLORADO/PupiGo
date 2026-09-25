@@ -20,6 +20,7 @@ from django.contrib import admin
 from django.urls import include, path
 from movie import views as movieViews
 urlpatterns = [
+    path('recommendations/', movieViews.recommendations, name='recommendations'),
     path('admin/', admin.site.urls),
     path('', movieViews.home),
     path('about/', movieViews.about),

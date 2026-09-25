@@ -147,3 +147,12 @@ __pycache__/
 *.py[cod]
 db.sqlite3
 media/
+
+# Taller 3: secretos y entorno local
+.env
+.env.*
+!.env.example
+.venv/
+!demo_data/media/
+!demo_data/media/**
+
