@@ -65,3 +65,14 @@ Esta es una bitácora escrita de verificación, no sustituye las capturas pedida
 ## Prueba de imagen con ChatGPT
 El usuario comunica autorización del profesor para generar imágenes con ChatGPT mientras corrige el enlace. Se creó una ilustración original de dos presos en un patio, representando amistad y esperanza, para The Shawshank Redemption. Archivo: media/movie/images/m_The Shawshank Redemption.png. PNG 1024x1536. Importación real: 1 imagen asignada, 49 pendientes. Carga verificada en navegador (naturalWidth 1024 y naturalHeight 1536). La imagen anterior no se eliminó; su referencia está en imagen_prueba_respaldo.json. Se utilizó la herramienta integrada de generación, no una llamada a la API de imágenes de Gemini/OpenAI. Esta prueba completa una imagen, no todas las ilustraciones del catálogo.
 
+
+## Actualización de cierre técnico — 25 de septiembre de 2026
+
+- Se amplió el catálogo con las 100 filas del CSV docente: 150 películas en total.
+- Auditoría: 100/100 descripciones coinciden literalmente con el CSV, 150/150 embeddings actuales y ningún archivo de imagen referenciado ausente.
+- Una ilustración específica generada con ChatGPT; 149 imágenes predeterminadas. La carga completa de imágenes docentes permanece pendiente.
+- Prueba web con catálogo completo: «Un pez padre recorre el océano para rescatar a su hijo» devuelve Finding Nemo, 0.9240.
+- 15 pruebas automáticas aprobadas; check sin errores y migraciones al día.
+- Capturas reales: 01_imagen_chatgpt.png, 02_descripcion_csv.png, 07_recomendacion_150.png.
+- Salidas reales: 03_embedding_real.txt, 04_csv_reejecucion.txt, 05_importacion_imagenes.txt, 06_similitudes_reales.txt, 08_verificacion_catalogo.json.
+- El registro anterior se conserva como historial. Quedan resueltos su pendiente de CSV y las capturas de la prueba; no se ha grabado/publicado video ni enviado el formulario.

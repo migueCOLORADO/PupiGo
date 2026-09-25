@@ -21,7 +21,7 @@ Texto sugerido:
 
 «Soy Samuel Montoya. En este taller integré inteligencia artificial en mi proyecto
 de películas con Django. Utilicé Gemini en su nivel gratuito para trabajar con
-descripciones y embeddings. El catálogo contiene 50 películas.»
+descripciones y embeddings. El catálogo contiene 150 películas: las 50 originales y 100 del CSV docente.»
 
 ## 2. Descripción e ilustración — unos 40 segundos
 
@@ -45,7 +45,7 @@ $env:PYTHONUTF8='1'
 ```
 
 «Cada descripción se representa con 768 números, llamados embedding. Guardé los
-50 vectores en SQLite usando un campo binario. Usamos el mismo modelo y tarea para
+150 vectores en SQLite usando un campo binario. Usamos el mismo modelo y tarea para
 las películas y para la búsqueda. La similitud de coseno permite comparar los textos.»
 
 El segundo comando consulta la API gratuita. Si aparece un error de cuota, espera
@@ -53,7 +53,7 @@ y vuelve a probar más tarde; no actives pagos. No inventes un resultado para el
 
 ## 4. Demostración del recomendador — aproximadamente un minuto
 
-Entra en Recomendador IA. Comprueba que muestre 50 de 50.
+Entra en Recomendador IA. Comprueba que muestre 150 de 150.
 
 Prueba estos textos, uno por uno:
 
@@ -73,15 +73,17 @@ del catálogo: una película inexistente en él nunca podrá aparecer como resul
 significado de una descripción. Los embeddings se guardan para no generarlos en cada
 búsqueda; cuando cambia una sinopsis, se debe actualizar su vector.»
 
-## Alcance que falta confirmar antes de la entrega definitiva
+## Mostrar la carga del CSV y explicar el límite de imágenes
 
-- El CSV suministrado tiene 100 títulos distintos de los 50 locales. El comando
-  importador existe, pero no ha actualizado el catálogo con ese material.
-- Hay una ilustración de prueba. La carga del resto depende del material del profesor
-  o de una instrucción que confirme el alcance de la alternativa con ChatGPT.
+Busca Carmencita y muestra su sinopsis. Explica: «Importé las 100 descripciones
+del CSV del profesor y conservé las 50 películas anteriores. No añadí años ni géneros
+que no estuvieran en el archivo». El CSV es el material del ejercicio, no una fuente
+de datos cinematográficos verificada.
 
-No presentes estos dos pendientes como completados. Si el profesor los dispensa,
-registra su indicación y ajusta el relato del video.
+Explica: «La guía limita la prueba de generación a una película y luego solicita
+importar una carpeta de imágenes. Como el enlace no estaba disponible, realicé la
+prueba con ChatGPT conforme a la alternativa indicada. El importador está preparado,
+pero la carga completa de esa carpeta sigue pendiente». No afirmes que está dispensada.
 
 ## Entrega
 

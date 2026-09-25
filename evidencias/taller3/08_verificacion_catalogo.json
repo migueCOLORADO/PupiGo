@@ -1,0 +1,9 @@
+{
+  "peliculas": 150,
+  "filas_csv": 100,
+  "descripciones_csv_coincidentes": 100,
+  "embeddings_actuales": 150,
+  "imagenes_especificas": 1,
+  "archivos_imagen_ausentes": [],
+  "pendiente_externo": "Importación completa de la carpeta de imágenes del profesor: enlace inaccesible."
+}

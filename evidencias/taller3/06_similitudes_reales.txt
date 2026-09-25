@@ -1,0 +1,4 @@
+The Shawshank Redemption / The Godfather: 0.6753
+Prompt: Una historia sobre crimen y familia
+The Shawshank Redemption: 0.7382
+The Godfather: 0.8304

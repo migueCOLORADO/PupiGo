@@ -94,6 +94,21 @@ class AITests(TestCase):
         self.assertEqual(embed.call_count,2)
         self.assertEqual(Movie.objects.exclude(emb=None).count(),2)
 
+    def test_csv_can_extend_catalog_without_duplicates_or_invented_metadata(self):
+        original = self.movie()
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'data.csv'
+            path.write_text('Title,Updated Description\nCarmencita,Una danza\n', encoding='utf-8')
+            for _ in range(2):
+                call_command('update_movies_from_csv', file=str(path), create_missing=True, stdout=io.StringIO())
+        imported = Movie.objects.get(title='Carmencita')
+        self.assertEqual(Movie.objects.count(), 2)
+        self.assertIsNone(imported.year)
+        self.assertEqual(imported.genre, '')
+        self.assertIsNone(imported.emb)
+        original.refresh_from_db()
+        self.assertEqual(original.description, 'Viaje espacial')
+
     @patch('movie.management.commands.update_descriptions.get_description',return_value='Generada para prueba')
     def test_description_updates_only_one(self, generate):
         self.movie()
@@ -118,7 +133,7 @@ class AITests(TestCase):
 
     def test_restore_catalog_on_empty_database_and_refuse_overwrite(self):
         call_command('restore_taller3',stdout=io.StringIO())
-        self.assertEqual(Movie.objects.count(),50)
-        self.assertEqual(sum(ai.current_embedding(m) for m in Movie.objects.all()),50)
+        self.assertEqual(Movie.objects.count(),150)
+        self.assertEqual(sum(ai.current_embedding(m) for m in Movie.objects.all()),150)
         with self.assertRaisesMessage(CommandError,'No se sobrescribe'):
             call_command('restore_taller3',stdout=io.StringIO())

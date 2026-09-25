@@ -1,17 +1,16 @@
 # Taller 3 — adaptación a Gemini sin pagos
 
-## Estado real
+## Estado y alcance
 
-Código preparado y 13 pruebas automáticas aprobadas con respuestas simuladas de la API.
-Verificación Django y migraciones sin errores. Página revisada en navegador.
-Actualización 24 de septiembre de 2026: conexión real a Gemini comprobada.
-Hay 50 de 50 embeddings actuales, una descripción reescrita con gemini-3.1-flash-lite
-y tres búsquedas verificadas en navegador. No se guardan vectores aleatorios.
-Ver `evidencias/taller3/VERIFICACION_REAL.md` para resultados y pendientes.
+El catálogo conserva las 50 películas anteriores y añade los 100 títulos del CSV
+docente. Sus descripciones se importan literalmente; no se inventan año ni género.
+La carpeta evidencias/taller3 contiene las verificaciones y capturas reales.
+La copia original permanece en C:\Users\USUARIO\moviereviewsproject.
 
-Esta copia conserva las 50 películas y las noticias anteriores. El original permanece
-en C:\Users\USUARIO\moviereviewsproject, rama Samuel-Montoya-Talleres-PI.
-La copia no incluye .git; no se ha publicado ningún cambio en GitHub.
+La prueba de una descripción utiliza Gemini gratuito. La prueba de una imagen
+utiliza ChatGPT, alternativa comunicada por el usuario como autorizada por el profesor.
+La carga completa de las imágenes docentes queda pendiente: su enlace no es accesible.
+No se afirma que una imagen sustituya ese requisito ni que esté dispensado.
 
 ## Configurar la clave
 
@@ -38,7 +37,7 @@ $env:PYTHONUTF8='1'
 .\.venv\Scripts\python.exe manage.py migrate
 # Reescribe UNA descripción con Gemini (no todo el catálogo):
 .\.venv\Scripts\python.exe manage.py update_descriptions
-# Genera hasta 5 embeddings faltantes. Repite para completar las 50 películas:
+# Genera hasta 5 embeddings faltantes. Repite para completar el catálogo:
 .\.venv\Scripts\python.exe manage.py movie_embeddings --limit 5
 .\.venv\Scripts\python.exe manage.py show_embedding
 # IDs existentes en esta copia: 4 y 5. Puedes elegir otros:
@@ -58,21 +57,21 @@ Cada búsqueda válida con catálogo listo realiza una petición de embedding.
 En otro equipo instala Python 3.12 o superior, crea un entorno virtual e instala
 `requirements.txt`. El entorno .venv no debe copiarse entre equipos.
 
-## Materiales del profesor: dos diferencias pendientes
+## Materiales del profesor
 
 ### Descripciones
 
-Se descargó `updated_movie_descriptions.csv` desde:
+Fuente del CSV conservado sin modificar:
 https://github.com/jdmartinev/TallerIA_PI/blob/main/aux_files/updated_movie_descriptions.csv
 
-Contiene 100 títulos distintos de las 50 películas de esta base. La importación
-se ejecutó y encontró CERO coincidencias. No se asignaron sinopsis de otras películas.
-El importador está implementado y probado, pero la evidencia real de importación
-requiere un CSV correspondiente a este catálogo o acordar ampliar el catálogo con
-los títulos del material. No se inventaron correspondencias entre títulos.
+Se añadieron sus 100 títulos porque no coincidían con los 50 originales. No se
+reemplazaron películas ni se asignaron sinopsis a títulos distintos. Las descripciones
+son material suministrado para el ejercicio; no se verificaron como reseñas históricas.
+El importador se puede repetir sin duplicar títulos y conserva los embeddings si
+el texto no cambia. Solo invalida el vector de una descripción modificada.
 
 ```powershell
-.\.venv\Scripts\python.exe manage.py update_movies_from_csv --file "ruta_al_csv_correcto.csv"
+.\.venv\Scripts\python.exe manage.py update_movies_from_csv --create-missing
 ```
 
 ### Ilustraciones
@@ -91,7 +90,7 @@ Solicita el ZIP o un enlace accesible. Coloca las imágenes correspondientes en
 El comando valida los archivos y conserva la imagen anterior si falta el archivo.
 Se generó una ilustración de prueba de The Shawshank Redemption con la herramienta
 integrada de ChatGPT, según la alternativa que el usuario comunicó del profesor.
-Su carga se verificó. Las otras 49 películas conservan su imagen anterior.
+Su carga se verificó. Las otras 149 películas usan la imagen predeterminada; no son ilustraciones generadas.
 
 ## Cómo funciona y cómo explicarlo
 
@@ -124,13 +123,13 @@ importación, reanudación, una única descripción, formularios, errores y pág
 
 1. Presentar el objetivo y explicar el cambio de proveedor a Gemini gratuito.
 2. Mostrar el catálogo y las descripciones actualizadas; distinguir las importadas
-   de las generadas en la prueba. No afirmar que el CSV actualizó datos si no lo hizo.
+   de las generadas en la prueba. Mostrar Carmencita como ejemplo del material importado.
 3. Mostrar las ilustraciones importadas cuando se reciba el material.
 4. Mostrar `show_embedding` y la comparación de dos películas con un prompt.
 5. Abrir Recomendador IA, escribir dos búsquedas distintas y explicar los resultados.
 6. Explicar que los vectores se almacenan y que solo la consulta necesita otro embedding.
 
-Pendiente: material correcto de CSV e imágenes, completar capturas, video y publicación final.
+Pendiente externo: carpeta de imágenes del profesor. Pendiente de entrega: video público, envío del formulario y publicación de cambios.
 
 ## Copia transportable y video
 
@@ -139,4 +138,11 @@ ya calculados. No incluye usuarios, sesiones, contraseñas ni claves API.
 `demo_data/media/` contiene las dos imágenes usadas: la predeterminada y la prueba de ChatGPT.
 En otro computador con Python 3.12 o superior, abre `preparar_en_otro_equipo.cmd`;
 el restaurador se niega a sobrescribir un catálogo existente. Para grabar y entregar
-consulta `GUIA_GRABACION.md`. La alternativa al CSV del profesor sigue por confirmar.
+consulta `GUIA_GRABACION.md`. El CSV ya se incorporó ampliando el catálogo y conservando las películas anteriores.
+
+## Comprobación final del catálogo ampliado
+
+15 pruebas aprobadas. Auditoría: 150 películas, 100 descripciones docentes coincidentes,
+150 embeddings actuales y cero archivos de imagen ausentes. Una ilustración generada
+con ChatGPT; las restantes son predeterminadas. Ejecuta `manage.py verify_taller3`
+para repetir la auditoría sin consumir API. Consulta ESTADO_ENTREGA.md para los pendientes.
