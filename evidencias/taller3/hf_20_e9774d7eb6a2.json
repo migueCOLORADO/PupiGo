@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:46:56.630198+00:00",
+  "pelicula_id": 20,
+  "titulo": "Finding Nemo",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: Finding Nemo. Synopsis: Un tímido pez payaso cruza el océano para reencontrarse con su hijo perdido.",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_20_e9774d7eb6a2.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "c3e9e86b1b81ed96f116206ca87acaf49657b57a750e7e5b3d63c797a325f544"
+}

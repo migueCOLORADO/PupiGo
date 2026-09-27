@@ -17,3 +17,16 @@
 ## Evidencias actualizadas recibidas el 27/09/2026
 Las capturas 13 a 16 documentan la descripción en admin, la imagen de Hugging Face en la interfaz, el embedding de The Godfather (768 dimensiones) y el recomendador con 10/10 películas (Finding Nemo, 0.9247). Quedan resueltos los pendientes de capturas indicados anteriormente. Nueve películas aún usan imagen predeterminada. El video y el formulario siguen pendientes.
 
+
+## Catálogo completo de imágenes — 27/09/2026
+Las diez películas tienen una imagen generada desde Django mediante Hugging Face,
+FLUX.1-schnell y Nscale. Las nueve solicitudes adicionales terminaron correctamente;
+no hubo errores de cuota ni se activaron pagos. Se validaron los archivos y sus
+huellas SHA256 contra los registros de generación. No hay imágenes pendientes.
+Algunas salidas contienen letras deformadas o marcas pese al prompt que las excluye;
+son ilustraciones de IA, no carteles oficiales. Se conservan los resultados reales.
+Los prompts exactos están en los registros evidencias/taller3/hf_*.json.
+Las capturas anteriores con carteles predeterminados muestran una etapa anterior.
+Para el video utiliza la página actual con las diez imágenes ya guardadas.
+Restan grabar/publicar el video y enviar el formulario; conviene actualizar la
+captura del catálogo completo para documentar este último cambio.

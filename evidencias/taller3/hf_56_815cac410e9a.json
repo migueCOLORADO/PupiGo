@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:47:24.150037+00:00",
+  "pelicula_id": 56,
+  "titulo": "Carmencita",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: Carmencita. Synopsis: \"Carmencita\" es una película de drama romántico que narra la historia de una joven bailarina de flamenco que lucha por alcanzar sus sueños en medio de un entorno hostil y conservador. Con una mezcla de pasión, determinación y sacrificio, Carmencita se enfrenta a obstáculos tanto personales como profesionales en su camino hacia el éxito. La película destaca por su impresionante coreografía de baile, así como por la emotiva interpretación de la actriz principal. Dirigida por un talentoso cineasta español, \"Carmencita\" ofrece una mirada íntima y conmovedora sobre el mundo del flamenco y la lucha por la realización personal. Recomendada para los amantes del cine de autor y las historias de superación, esta película cautivará a aquellos que buscan una experiencia cinematográfica emocionante y conmovedora.",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_56_815cac410e9a.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "996912d6d7e48878fdea2db1c42e0b38c979f31e5f5648b460485a4a2424f348"
+}

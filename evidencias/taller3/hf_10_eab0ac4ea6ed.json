@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:46:36.271426+00:00",
+  "pelicula_id": 10,
+  "titulo": "The Matrix",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: The Matrix. Synopsis: Un hacker descubre que la realidad es una simulación y se une a la rebelión contra las máquinas.",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_10_eab0ac4ea6ed.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "577d3c19cd0307725ea995203640031e220cf33cf24f117745f23ff8f86fa8f3"
+}

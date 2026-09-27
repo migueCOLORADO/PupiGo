@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:46:49.873332+00:00",
+  "pelicula_id": 19,
+  "titulo": "Toy Story",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: Toy Story. Synopsis: Los juguetes de un niño cobran vida y viven aventuras cuando los humanos no están presentes.",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_19_810c1d4b171f.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "52e9d21fb72016cca6f6d618ed42661f86b8c0b85edcf02c226b425bb5949c64"
+}

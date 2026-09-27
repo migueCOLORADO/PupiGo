@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:46:29.653570+00:00",
+  "pelicula_id": 5,
+  "titulo": "The Godfather",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: The Godfather. Synopsis: El patriarca de una dinastía del crimen organizado transfiere el control a su reticente hijo.",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_5_c36ee868e125.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "9b79438a1a8b0e5c29a13acb8c7e4848086fcf1db82b9f2266c5e81ba3e7019b"
+}

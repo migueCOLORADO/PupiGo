@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:47:17.442991+00:00",
+  "pelicula_id": 55,
+  "titulo": "Castillo medieval",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: Castillo medieval. Synopsis: \"Castillo medieval\" es una película de fantasía épica que sigue la historia del príncipe Maximiliano, quien debe enfrentarse a un malvado hechicero que amenaza con destruir su reino. Con impresionantes escenas de batallas, efectos especiales y un elenco de personajes memorables, esta película es perfecta para los amantes de la acción y la aventura. Además, la trama está llena de giros inesperados y momentos emocionantes que mantendrán al espectador al borde de su asiento. Con una ambientación medieval detallada y una banda sonora épica, \"Castillo medieval\" es una película que no te puedes perder si eres fanático de las historias de héroes y villanos en un mundo de fantasía. ¡Prepárate para sumergirte en un viaje lleno de magia y emoción!",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_55_ff2ec7e0df56.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "ea71d49f971c73b95237d9466220b3f09617545b2c2269225977eb87e7f63336"
+}

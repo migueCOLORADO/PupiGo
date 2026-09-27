@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:47:10.594973+00:00",
+  "pelicula_id": 54,
+  "titulo": "La captura",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: La captura. Synopsis: \"La captura\" es una película de animación infantil que sigue la historia de un grupo de amigos que se embarcan en una emocionante aventura para rescatar a su mascota perdida. Con un toque de comedia y acción, esta película es perfecta para entretener a los más pequeños de la casa. Con personajes entrañables y una trama llena de giros inesperados, \"La captura\" logra mantener la atención de los espectadores de principio a fin. Además, la animación colorida y vibrante hace que la película sea visualmente atractiva y cautivadora. Con un mensaje positivo sobre la importancia de la amistad y la valentía, esta película es ideal para disfrutar en familia y pasar un rato divertido juntos. Recomendada para niños de todas las edades, \"La captura\" es una opción segura para una tarde de cine en casa.",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_54_5f213977f224.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "e8d12685010a4f82146999a4f40a72532c0523359f325d8de9468574264a696b"
+}

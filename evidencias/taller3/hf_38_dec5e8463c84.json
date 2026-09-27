@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:47:03.591487+00:00",
+  "pelicula_id": 38,
+  "titulo": "Coco",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: Coco. Synopsis: Un niño viaja a la Tierra de los Muertos para descubrir la verdad sobre su familia.",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_38_dec5e8463c84.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "4d515b0aae8fb7af320c59a106727b4ea173ed1f5045f77dd3f5ccf9cc4be871"
+}

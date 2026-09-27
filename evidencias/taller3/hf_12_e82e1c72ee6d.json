@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:46:42.972542+00:00",
+  "pelicula_id": 12,
+  "titulo": "Interstellar",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: Interstellar. Synopsis: Un grupo de exploradores viaja a través de un agujero de gusano en busca de un nuevo hogar.",
+  "imagen_anterior": "movie/images/default.jpg",
+  "imagen_generada": "movie/images/hf_12_e82e1c72ee6d.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "0ee1db179681699eae1c5026a7f7f1f238651ad25172537bdf6a8c14734ea26d"
+}

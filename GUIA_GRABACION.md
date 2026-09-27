@@ -27,3 +27,16 @@ Explica los 768 valores del embedding y la similitud coseno.
 Guarda capturas nuevas del recomendador y del embedding: las anteriores con 150
 registros son históricas. Publica el video con acceso por enlace y verifica que se
 pueda reproducir antes de enviarlo en https://forms.gle/BFvZSuuoKKHP4k8b6.
+
+## Catálogo completo de imágenes — 27/09/2026
+Las diez películas tienen una imagen generada desde Django mediante Hugging Face,
+FLUX.1-schnell y Nscale. Las nueve solicitudes adicionales terminaron correctamente;
+no hubo errores de cuota ni se activaron pagos. Se validaron los archivos y sus
+huellas SHA256 contra los registros de generación. No hay imágenes pendientes.
+Algunas salidas contienen letras deformadas o marcas pese al prompt que las excluye;
+son ilustraciones de IA, no carteles oficiales. Se conservan los resultados reales.
+Los prompts exactos están en los registros evidencias/taller3/hf_*.json.
+Las capturas anteriores con carteles predeterminados muestran una etapa anterior.
+Para el video utiliza la página actual con las diez imágenes ya guardadas.
+Restan grabar/publicar el video y enviar el formulario; conviene actualizar la
+captura del catálogo completo para documentar este último cambio.
