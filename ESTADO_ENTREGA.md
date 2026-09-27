@@ -13,3 +13,7 @@
   enviar correo, nombre y enlace al formulario https://forms.gle/BFvZSuuoKKHP4k8b6.
 - Esta selección de diez películas es una adaptación del proyecto, no una cantidad
   expresamente exigida ni aprobada como mínimo por el profesor.
+
+## Evidencias actualizadas recibidas el 27/09/2026
+Las capturas 13 a 16 documentan la descripción en admin, la imagen de Hugging Face en la interfaz, el embedding de The Godfather (768 dimensiones) y el recomendador con 10/10 películas (Finding Nemo, 0.9247). Quedan resueltos los pendientes de capturas indicados anteriormente. Nueve películas aún usan imagen predeterminada. El video y el formulario siguen pendientes.
+
