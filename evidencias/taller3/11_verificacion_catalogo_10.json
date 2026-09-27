@@ -1,0 +1,9 @@
+{
+  "peliculas": 10,
+  "filas_csv": 3,
+  "descripciones_csv_coincidentes": 3,
+  "embeddings_actuales": 10,
+  "imagenes_especificas": 1,
+  "archivos_imagen_ausentes": [],
+  "pendiente_imagenes": "Integrar y verificar generación de una imagen desde el código mediante Hugging Face."
+}

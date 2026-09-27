@@ -133,7 +133,7 @@ class AITests(TestCase):
 
     def test_restore_catalog_on_empty_database_and_refuse_overwrite(self):
         call_command('restore_taller3',stdout=io.StringIO())
-        self.assertEqual(Movie.objects.count(),150)
-        self.assertEqual(sum(ai.current_embedding(m) for m in Movie.objects.all()),150)
+        self.assertEqual(Movie.objects.count(),10)
+        self.assertEqual(sum(ai.current_embedding(m) for m in Movie.objects.all()),10)
         with self.assertRaisesMessage(CommandError,'No se sobrescribe'):
             call_command('restore_taller3',stdout=io.StringIO())

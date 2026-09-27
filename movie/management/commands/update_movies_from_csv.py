@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Carga las descripciones proporcionadas por el profesor, sin usar la API.'
 
     def add_arguments(self, parser):
-        parser.add_argument('--file', default=str(settings.BASE_DIR / 'updated_movie_descriptions.csv'))
+        parser.add_argument('--file', default=str(settings.BASE_DIR / 'descripciones_seleccion_10.csv'))
         parser.add_argument('--create-missing', action='store_true', help='Añade títulos del material sin inventar año ni género.')
 
     @transaction.atomic
