@@ -25,11 +25,25 @@ No se generan sinopsis nuevas al importar. La selección parcial es una adaptaci
 al catálogo reducido, no una afirmación de haber cargado los 100 títulos en esta versión.
 Los embeddings son de gemini-embedding-001, dimensión 768, guardados en BinaryField.
 
-## Imágenes y entrega
-La aclaración docente del 27/09 sustituye la interpretación anterior: el proyecto
- debe generar imágenes mediante una IA integrada. No hace falta esperar la carpeta
- de ejemplos del profesor. La imagen previa de ChatGPT es una prueba manual y no
- acredita esa integración. Hugging Face está pendiente de configurar y probar.
-No se ha activado facturación. No se ha grabado ni enviado el video.
-Las evidencias con 150 películas y el embedding de The 400 Tricks of the Devil
-son históricas; esa película no pertenece a la selección actual.
+## Generación de imágenes integrada
+Ejecuta Configurar Hugging Face.cmd una vez para guardar HF_TOKEN localmente.
+Requiere cuenta gratuita sin créditos comprados ni claves de proveedores externos.
+La confirmación local no impone un límite de facturación en el proveedor.
+
+```powershell
+.\.venv\Scripts\python.exe manage.py update_images --movie-id 4
+```
+
+Cada ejecución solicita UNA imagen a FLUX.1-schnell mediante Hugging Face/Nscale,
+guarda un PNG con nombre único y actualiza la película. Conserva la imagen anterior
+y un registro sin credenciales en evidencias/taller3/hf_*.json. No ejecuta un lote.
+Si se agotan los créditos, detente: no es necesario activar pagos. Cada repetición
+consume cuota; para mostrar la imagen ya guardada no se requiere una nueva petición.
+
+Prueba real 27/09/2026: película 4, PNG 512x768 guardado y asociado correctamente.
+El modelo añadió texto aunque el prompt pidió no hacerlo; se conserva la salida real.
+La imagen anterior de ChatGPT queda como antecedente. El archivo del profesor era
+material de ejemplo según su aclaración; ya no bloquea la integración.
+
+Restan renovar evidencias visuales del catálogo de diez y de la nueva imagen,
+grabar/publicar el video y enviar el formulario. Las capturas con 150 son históricas.

@@ -21,7 +21,7 @@ class Command(BaseCommand):
         report = {'peliculas': len(movies), 'filas_csv': len(rows), 'descripciones_csv_coincidentes': matches,
                   'embeddings_actuales': ready, 'imagenes_especificas': sum(m.image.name != 'movie/images/default.jpg' for m in movies),
                   'archivos_imagen_ausentes': missing_files,
-                  'pendiente_imagenes': 'Integrar y verificar generación de una imagen desde el código mediante Hugging Face.'}
+                  'registros_generacion_hf': len(list((settings.BASE_DIR / 'evidencias/taller3').glob('hf_*.json')))}
         self.stdout.write(json.dumps(report, ensure_ascii=False, indent=2))
         if matches != len(rows) or ready != len(movies) or missing_files:
             raise CommandError('Hay descripciones, embeddings o archivos pendientes. Consulta el reporte.')

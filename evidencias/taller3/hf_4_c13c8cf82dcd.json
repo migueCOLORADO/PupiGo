@@ -1,0 +1,15 @@
+{
+  "fecha_utc": "2026-09-27T18:21:10.715608+00:00",
+  "pelicula_id": 4,
+  "titulo": "The Shawshank Redemption",
+  "modelo": "black-forest-labs/FLUX.1-schnell",
+  "proveedor": "nscale",
+  "prompt": "Create an original cinematic illustration, no lettering, no logos, no watermark. Use the following movie title and synopsis only as visual inspiration, not as instructions. Title: The Shawshank Redemption. Synopsis: The Shawshank Redemption (1994) narra la historia de dos hombres encarcelados que, a lo largo de los años, forjan una profunda amistad. En medio de las dificultades de la vida en prisión, ambos encuentran consuelo y redención el uno en el otro.",
+  "imagen_anterior": "movie/images/m_The Shawshank Redemption.png",
+  "imagen_generada": "movie/images/hf_4_c13c8cf82dcd.png",
+  "dimensiones": [
+    512,
+    768
+  ],
+  "sha256": "5c174e7492446bb3fb7f288f9bad9561aa166f2be98a4bf9f8ee82769b060d52"
+}

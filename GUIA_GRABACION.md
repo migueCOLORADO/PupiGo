@@ -1,6 +1,6 @@
 # Guion de grabación — 10 películas
 
-Graba cuando esté probada la generación de imágenes desde Django. No muestres .env
+Generación desde Django probada con Hugging Face el 27/09/2026. No muestres .env
 ni claves. Duración sugerida: 3–5 minutos; no es un requisito del profesor.
 
 1. Presenta el proyecto Django y sus 10 películas. Explica que Gemini permite
@@ -9,8 +9,9 @@ ni claves. Duración sugerida: 3–5 minutos; no es un requisito del profesor.
 3. Busca Carmencita y explica que es uno de los tres títulos importados del CSV
    docente. Se conservaron las 100 filas originales en un archivo separado.
 4. Muestra la generación de una imagen desde el código y el resultado asociado a
-   la película. ESTE PASO ESTÁ PENDIENTE: la imagen anterior creada manualmente
-   con ChatGPT no demuestra la integración requerida.
+   la película. El comando es `manage.py update_images --movie-id 4`, usando el Python
+   de .venv. Genera una sola imagen con FLUX.1-schnell mediante Hugging Face/Nscale.
+   Ya existe una imagen generada; repetir el comando consume cuota gratuita.
 5. En PowerShell ejecuta:
 ```powershell
 .\.venv\Scripts\python.exe manage.py show_embedding
