@@ -8,6 +8,57 @@ import matplotlib
 import io
 import urllib, base64
 
+import os
+import numpy as np
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+# Cargar la API Key de Gemini (geminiAI.env está un nivel arriba de DjangoProjectBase)
+_env_path = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    'geminiAI.env'
+)
+load_dotenv(_env_path)
+
+
+def cosine_similarity(a, b):
+    # sim(a, b) = (a · b) / (||a|| * ||b||)
+    return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
+
+
+def recommend(request):
+    prompt = request.GET.get('prompt')
+    best_movie = None
+    max_similarity = None
+
+    if prompt:
+        genai.configure(api_key=os.environ.get('gemini_apikey'))
+
+        # Embedding del prompt del usuario
+        response = genai.embed_content(
+            model="models/gemini-embedding-001",
+            content=prompt
+        )
+        prompt_emb = np.array(response["embedding"], dtype=np.float32)
+
+        # Recorrer la base de datos y quedarse con la película más similar
+        max_similarity = -1
+        for movie in Movie.objects.all():
+            movie_emb = np.frombuffer(movie.emb, dtype=np.float32)
+            # Solo comparar películas con embedding real (mismas dimensiones)
+            if movie_emb.shape != prompt_emb.shape:
+                continue
+            similarity = cosine_similarity(prompt_emb, movie_emb)
+            if similarity > max_similarity:
+                max_similarity = similarity
+                best_movie = movie
+
+    return render(request, 'recommend.html', {
+        'prompt': prompt,
+        'best_movie': best_movie,
+        'similarity': max_similarity,
+    })
+
 def home(request):
     #return HttpResponse('<h1>Welcome to Home Page</h1>')
     #return render(request, 'home.html')

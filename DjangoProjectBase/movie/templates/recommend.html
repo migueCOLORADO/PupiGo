@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <h1 class="mb-4">🎬 Recomendador de películas</h1>
+
+    <form action="" method="get">
+        <div class="mb-3">
+            <label for="prompt" class="form-label">Describe la película que buscas:</label>
+            <input type="text" class="form-control" name="prompt" id="prompt"
+                   value="{{ prompt|default:'' }}"
+                   placeholder="Ej: un tren llegando a una estación"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Recomendar</button>
+    </form>
+
+    {% if prompt %}
+        <hr/>
+        <p>Buscaste: <strong>{{ prompt }}</strong></p>
+
+        {% if best_movie %}
+            <div class="card" style="max-width: 400px;">
+                <img src="{{ best_movie.image.url }}" class="card-img-top" alt="{{ best_movie.title }}">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ best_movie.title }}</h5>
+                    <p class="card-text">{{ best_movie.description }}</p>
+                    <p class="card-text"><small class="text-muted">Similitud: {{ similarity|floatformat:4 }}</small></p>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-danger">No se encontró ninguna película con embedding para comparar.</p>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% endblock content %}
