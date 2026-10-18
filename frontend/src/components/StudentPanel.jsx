@@ -4,14 +4,17 @@ import { etaMinutes } from '../lib/geo';
 import { formatAgo, secondsSince } from '../lib/time';
 import { NAMES } from './map/geometry';
 import { DirArrow, IconClock, IconInfo, IconRefresh } from './map/icons';
+import { isPositionStale } from './map/RouteMap';
 import StatusChip, { STATUS_LABEL } from './StatusChip';
 
 function useTripInfo(trip) {
   const now = useNow();
   const pos = trip?.last_position;
-  const eta = trip?.status === 'in_progress' ? etaMinutes(pos, trip.route, trip.direction) : null;
+  // UH4: con la posicion desactualizada el ETA se oculta; un ETA congelado engaña al estudiante.
+  const stale = isPositionStale(trip);
+  const eta = trip?.status === 'in_progress' && !stale ? etaMinutes(pos, trip.route, trip.direction) : null;
   const ago = secondsSince(pos?.timestamp, now);
-  return { eta, ago };
+  return { eta, ago, stale };
 }
 
 function endedNote(lastEnded) {
@@ -23,13 +26,17 @@ function endedNote(lastEnded) {
 }
 
 export default function StudentPanel({ trip, lastEnded, compact, mobile }) {
-  const { eta, ago } = useTripInfo(trip);
+  const { eta, ago, stale } = useTripInfo(trip);
   const dir = trip?.direction || 'ida';
   const n = mobile ? 'short' : 'long';
   const start = dir === 'vuelta' ? NAMES.eafit[n] : NAMES.metro[n];
   const end = dir === 'vuelta' ? NAMES.metro[n] : NAMES.eafit[n];
   const sub = trip
-    ? trip.status === 'waiting' ? 'El colectivo está en el punto de salida, aún no inicia' : 'Dirección del recorrido activo'
+    ? trip.status === 'waiting'
+      ? 'El colectivo está en el punto de salida, aún no inicia'
+      : stale
+        ? 'Sin señal GPS reciente. Se muestra la última posición conocida del colectivo'
+        : 'Dirección del recorrido activo'
     : (endedNote(lastEnded) || 'No hay un recorrido activo en este momento');
   const off = trip ? '' : ' off';
 
