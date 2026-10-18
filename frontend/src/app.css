@@ -1,0 +1,30 @@
+/* Ajustes v1 sobre el CSS del mockup: layout a pantalla completa, estados sin recorrido y controles del conductor. */
+.app,.tablet-app{height:100%;display:flex;flex-direction:column;background:var(--white)}
+.tablet-map-wrap{display:flex;flex-direction:column}
+.tablet-map-wrap .map-wrap{height:auto;flex:1}
+.tablet-infobar{align-items:flex-start}
+.side-col{min-height:0}
+
+/* Estado "apagado" (sin recorrido activo / sin señal) */
+.live-pill.off,.m-live.off{background:var(--gray-100);color:var(--gray-500)}
+.live-pill.off .pulse,.m-live.off .pulse{background:var(--gray-400)}
+.live-pill.off .pulse::after,.m-live.off .pulse::after,
+.map-live-chip.off .pulse::after,.m-live-chip.off .pulse::after,
+.status-chip.off .pulse::after,.m-status-chip.off .pulse::after{animation:none;display:none}
+.map-live-chip.off .pulse,.m-live-chip.off .pulse{background:var(--gray-400);animation:none}
+.status-chip.off .pulse,.m-status-chip.off .pulse{animation:none;opacity:.6}
+.card-primary.off,.m-card-primary.off{background:var(--gray-500);box-shadow:none}
+.bus-marker-wrap.waiting .bus-ring{animation:none;opacity:.35}
+.dir-toggle button[disabled],.m-dir-toggle button[disabled]{cursor:default;opacity:1}
+
+/* Botones y alertas del panel del conductor (misma familia visual del mockup) */
+.btn{display:flex;align-items:center;justify-content:center;width:100%;padding:11px 14px;border:0;border-radius:var(--radius-sm);font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s,transform .05s}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.btn-primary{background:var(--blue);color:var(--white);box-shadow:var(--shadow-float)}
+.btn-primary:hover:not([disabled]){background:var(--blue-dark)}
+.btn-danger{background:#FEE2E2;color:#B91C1C}
+.btn-danger:hover:not([disabled]){background:#FECACA}
+.alert-danger,.alert-ok{display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:700;line-height:1.45}
+.alert-danger{background:#FEE2E2;color:#991B1B}
+.alert-ok{background:var(--green-bg);color:var(--green)}
