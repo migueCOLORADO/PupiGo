@@ -1,4 +1,5 @@
 import logo from '../assets/logo.png';
+import BrandSlogan from './BrandSlogan';
 import DirToggle from './DirToggle';
 
 export function TopBar({ trip, direction, onDirectionChange, canToggle }) {
@@ -7,7 +8,7 @@ export function TopBar({ trip, direction, onDirectionChange, canToggle }) {
     <div className="topbar">
       <div className="brand">
         <img className="logo" src={logo} alt="PupiGo" />
-        <div className="brand-text"><p>Seguimiento en tiempo real</p></div>
+        <div className="brand-text"><BrandSlogan /></div>
       </div>
       <div className="topbar-right">
         <DirToggle direction={direction} onChange={onDirectionChange} disabled={!canToggle} />
@@ -22,7 +23,7 @@ export function MobileTopBar({ trip, direction, onDirectionChange, canToggle }) 
   return (
     <>
       <div className="m-topbar">
-        <div className="m-brand"><img className="logo" src={logo} alt="PupiGo" /></div>
+        <div className="m-brand"><img className="logo" src={logo} alt="PupiGo" /><BrandSlogan /></div>
         <div className={`m-live${live ? '' : ' off'}`}><span className="pulse" />{live ? 'En vivo' : 'Sin señal'}</div>
       </div>
       <div className="px-[18px] pb-[10px]">
