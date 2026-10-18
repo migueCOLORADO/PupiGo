@@ -1,0 +1,4 @@
+/* UH4: pegar debajo de .bus-marker-wrap.waiting .bus-ring en app.css */
+.bus-marker-wrap.stale .bus-ring{animation:none;opacity:0}
+.bus-marker-wrap.stale .bus-core{background:var(--gray-500);box-shadow:0 4px 12px rgba(16,25,43,.25)}
+.map-live-chip.stale .pulse,.m-live-chip.stale .pulse{background:#FBBF24;animation:none}
