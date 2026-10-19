@@ -16,6 +16,23 @@ class Route(models.Model):
     def __str__(self):
         return self.name
 
+class Stop(models.Model):
+    route = models.ForeignKey(
+        Route,
+        on_delete=models.CASCADE,
+        related_name="stops"
+    )
+    name = models.CharField(max_length=120)
+    lat = models.FloatField()
+    lng = models.FloatField()
+    order = models.PositiveSmallIntegerField()
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"{self.name} - {self.route.name}"
+
 
 class Vehicle(models.Model):
     plate = models.CharField(max_length=12, unique=True)

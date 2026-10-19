@@ -1,9 +1,18 @@
 from django.conf import settings
 from rest_framework import serializers
-from .models import Driver, Position, Route, Trip, Vehicle
+from .models import Driver, Position, Route, Stop, Trip, Vehicle
+
+
+
+class StopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stop
+        fields = ["id", "name", "lat", "lng", "order"]
 
 
 class RouteSerializer(serializers.ModelSerializer):
+    stops = StopSerializer(many=True, read_only=True)
+
     class Meta:
         model = Route
         fields = "__all__"
