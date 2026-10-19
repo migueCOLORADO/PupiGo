@@ -111,7 +111,18 @@ class Trip(models.Model):
 
     @property
     def last_position(self):
+        """UH4: la ultima posicion se conserva en BD; no depende de que sigan llegando lecturas."""
         return self.positions.order_by("-timestamp").first()
+
+    @property
+    def position_age_seconds(self):
+        """UH4 / NFR disponibilidad: segundos desde que el servidor recibio la ultima lectura.
+        Usa received_at (reloj del servidor) para no depender del reloj del dispositivo.
+        None si aun no hay ninguna posicion."""
+        pos = self.last_position
+        if pos is None:
+            return None
+        return max(0, int((timezone.now() - pos.received_at).total_seconds()))
 
 
 class Position(models.Model):
