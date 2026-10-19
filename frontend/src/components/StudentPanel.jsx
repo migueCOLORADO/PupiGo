@@ -33,6 +33,7 @@ import StatusChip, { STATUS_LABEL } from './StatusChip';
 import StatusHelp from './StatusHelp';
 import { BrandFoot } from './BrandSlogan';
 import Uh9Alert from './Uh9Alert';
+import AssistantPanel from './AssistantPanel';
 
 // Placeholder unico para los datos del RF-11 cuando no hay recorrido activo.
 const SIN_DATO = '—';
@@ -142,6 +143,7 @@ export default function StudentPanel({ trip, lastEnded, compact, mobile, error, 
             </div>
           </div>
         </div>
+        <AssistantPanel />
         {mobile && <Link to="/conductor" className="text-center text-[11px] font-semibold text-gray-400">Soy el conductor</Link>}
         <BrandFoot />
       </>
@@ -196,6 +198,7 @@ export default function StudentPanel({ trip, lastEnded, compact, mobile, error, 
         <IconInfo />
         <span>La posición se actualiza automáticamente. Ruta fija entre la Estación Aguacatala y la Entrada Las Hermosas, pasando por el paradero de buses de la Aguacatala.</span>
       </div>
+      <AssistantPanel />
       <Link to="/conductor" className="text-center text-[11px] font-semibold text-gray-400">Soy el conductor</Link>
       <BrandFoot />
     </>
