@@ -1,0 +1,10 @@
+# PupiGo backend dependencies. Validated with Python 3.13.7.
+# Install from the repository root: pip install -r requirements.txt
+# Frontend dependencies are in frontend/package.json (cd frontend && npm install).
+Django==6.1.2
+djangorestframework==3.18.3
+django-cors-headers==4.9.0
+# Installed by Django
+asgiref==3.12.1
+sqlparse==0.6.0
+tzdata==2026.5; sys_platform == "win32"
