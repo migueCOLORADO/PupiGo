@@ -8,6 +8,7 @@
   --blue:#2563EB; --blue-dark:#1D4ED8; --blue-50:#EFF6FF;
   --white:#FFFFFF; --gray-25:#FAFBFC; --gray-50:#F5F7FA; --gray-100:#EEF1F5; --gray-200:#E2E6EC;
   --gray-400:#9AA3B2; --gray-500:#6B7280; --ink:#10192B; --green:#16A34A; --green-bg:#E9F9EF;
+  --amber:#F6A609; --amber-dark:#B45309; --amber-50:#FEF3DD; --red:#DC2626; --red-50:#FEECEC;
   --radius-md:14px; --radius-sm:10px;
   --shadow-soft:0 1px 2px rgba(16,25,43,0.04),0 8px 24px rgba(16,25,43,0.06);
   --shadow-card:0 1px 2px rgba(16,25,43,0.03),0 4px 14px rgba(16,25,43,0.05);
@@ -140,3 +141,52 @@ body{font-family:'Inter',-apple-system,'SF Pro Display',BlinkMacSystemFont,sans-
 .m-live-chip .pulse{width:6px;height:6px;border-radius:50%;background:#4ADE80;animation:pulse-ring 2s infinite}
 .sheet{flex-shrink:0;background:var(--white);border-radius:24px 24px 0 0;margin-top:-22px;position:relative;z-index:5;box-shadow:0 -8px 24px rgba(16,25,43,.08);padding:12px 16px 18px;display:flex;flex-direction:column;gap:10px}
 .sheet-handle{width:36px;height:4px;border-radius:99px;background:var(--gray-200);margin:0 auto 4px}
+
+/* ===== UH9 identidad de marca e interfaz usable (clases nuevas, prefijo uh9-) ===== */
+/* Slogan de marca en el topbar (desktop/tablet y movil) */
+.uh9-slogan{font-size:11.5px;color:var(--gray-400);font-weight:600;letter-spacing:.01em}
+.uh9-slogan b{color:var(--blue);font-weight:800}
+.m-brand .uh9-slogan{display:none}
+@media (min-width:420px){.m-brand .uh9-slogan{display:block;font-size:10px;margin-top:1px}}
+
+/* Microcopy de marca al pie del panel */
+.uh9-brand-foot{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:7px;padding-top:6px;font-size:10.5px;font-weight:600;color:var(--gray-400);text-align:center}
+.uh9-brand-foot .dot{width:4px;height:4px;border-radius:50%;background:var(--amber)}
+
+/* Alerta de error con accion de recuperacion (#114) */
+.uh9-alert{display:flex;gap:11px;align-items:flex-start;padding:13px 15px;border-radius:var(--radius-sm);font-size:12.5px;line-height:1.5;font-weight:500}
+.uh9-alert .uh9-alert-ico{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.uh9-alert .uh9-alert-ico svg{width:18px;height:18px}
+.uh9-alert .uh9-alert-body{display:flex;flex-direction:column;gap:9px;min-width:0}
+.uh9-alert .uh9-alert-title{font-weight:800;font-size:13px}
+.uh9-alert .uh9-alert-msg{opacity:.92}
+.uh9-alert.danger{background:var(--red-50);color:#7F1D1D;border:1px solid #F7C6C6}
+.uh9-alert.danger .uh9-alert-ico{color:var(--red)}
+.uh9-alert.warn{background:var(--amber-50);color:var(--amber-dark);border:1px solid #F3D9A6}
+.uh9-alert.warn .uh9-alert-ico{color:var(--amber-dark)}
+.uh9-recover-btn{align-self:flex-start;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;padding:8px 14px;border-radius:9px;background:var(--blue);color:#fff;transition:.15s}
+.uh9-recover-btn:hover{background:var(--blue-dark)}
+.uh9-recover-btn:disabled{opacity:.6;cursor:default}
+
+/* Ayuda contextual de estados del recorrido (#115) */
+.uh9-help{position:relative;display:inline-flex}
+.uh9-help-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;background:transparent;color:inherit;opacity:.7;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;font-weight:800;font-size:12px;line-height:1;transition:.15s;flex-shrink:0}
+.uh9-help-btn:hover,.uh9-help-btn[aria-expanded="true"]{opacity:1}
+.uh9-help-pop{position:absolute;z-index:40;top:calc(100% + 8px);right:0;width:248px;background:var(--white);color:var(--ink);border:1px solid var(--gray-200);border-radius:var(--radius-sm);box-shadow:var(--shadow-soft);padding:12px 14px;font-size:12px;line-height:1.5;font-weight:500}
+.uh9-help-pop .uh9-help-h{font-weight:800;font-size:12.5px;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.uh9-help-pop .uh9-help-h .uh9-help-badge{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.uh9-help-row{display:flex;gap:8px;padding:5px 0;border-top:1px solid var(--gray-100)}
+.uh9-help-row:first-of-type{border-top:none}
+.uh9-help-row .k{font-weight:700;color:var(--ink);white-space:nowrap}
+.uh9-help-row .v{color:var(--gray-500)}
+.uh9-help-badge.waiting{background:var(--amber)}
+.uh9-help-badge.in_progress{background:var(--green)}
+.uh9-help-badge.completed{background:var(--blue)}
+.uh9-help-badge.cancelled{background:var(--red)}
+.uh9-help-badge.none{background:var(--gray-400)}
+
+/* Estado "en espera" con acento ambar (viveza de marca) */
+.uh9-waiting-accent{color:var(--amber-dark)}
+
+/* Foco visible accesible (heuristica Nielsen: visibilidad/control) */
+.uh9-help-btn:focus-visible,.uh9-recover-btn:focus-visible,.uh9-brand-foot a:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:9px}

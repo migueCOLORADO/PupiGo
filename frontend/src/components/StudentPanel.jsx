@@ -6,6 +6,9 @@ import { NAMES } from './map/geometry';
 import { DirArrow, IconClock, IconInfo, IconRefresh } from './map/icons';
 import { isPositionStale } from './map/RouteMap';
 import StatusChip, { STATUS_LABEL } from './StatusChip';
+import StatusHelp from './StatusHelp';
+import { BrandFoot } from './BrandSlogan';
+import Uh9Alert from './Uh9Alert';
 
 function useTripInfo(trip) {
   const now = useNow();
@@ -25,7 +28,7 @@ function endedNote(lastEnded) {
   return null;
 }
 
-export default function StudentPanel({ trip, lastEnded, compact, mobile }) {
+export default function StudentPanel({ trip, lastEnded, compact, mobile, error, onRetry }) {
   const { eta, ago, stale } = useTripInfo(trip);
   const dir = trip?.direction || 'ida';
   const n = mobile ? 'short' : 'long';
@@ -43,12 +46,17 @@ export default function StudentPanel({ trip, lastEnded, compact, mobile }) {
   if (compact) {
     return (
       <>
+        {error && (
+          <Uh9Alert variant="danger" title="No pudimos actualizar la informacion"
+            message="Revisa tu conexion. La posicion del colectivo puede estar desactualizada."
+            actionLabel="Reintentar" onAction={onRetry} />
+        )}
         <div className={`m-card-primary${off}`}>
           <div className="m-row-top">
             <div className="m-direction">
               <span className="stop start">{start}</span><DirArrow flipped={dir === 'vuelta'} sw={2.6} /><span className="stop end">{end}</span>
             </div>
-            <StatusChip compact status={trip?.status} />
+            <div className="flex items-center gap-2"><StatusHelp current={trip?.status} /><StatusChip compact status={trip?.status} /></div>
           </div>
           <div className="m-sub">{sub}</div>
         </div>
@@ -59,6 +67,7 @@ export default function StudentPanel({ trip, lastEnded, compact, mobile }) {
             <div className="m-mini-text"><div className="v">{formatAgo(ago)}</div><div className="l">Actualizado</div></div></div>
         </div>
         {mobile && <Link to="/conductor" className="text-center text-[11px] font-semibold text-gray-400">Soy el conductor</Link>}
+        <BrandFoot />
       </>
     );
   }
@@ -66,8 +75,13 @@ export default function StudentPanel({ trip, lastEnded, compact, mobile }) {
   return (
     <>
       <div className="panel-title">Recorrido actual</div>
+      {error && (
+        <Uh9Alert variant="danger" title="No pudimos actualizar la informacion"
+          message="Revisa tu conexion. La posicion del colectivo puede estar desactualizada."
+          actionLabel="Reintentar" onAction={onRetry} />
+      )}
       <div className={`card card-primary${off}`}>
-        <div className="row-top"><StatusChip status={trip?.status} /></div>
+        <div className="row-top"><StatusChip status={trip?.status} /><StatusHelp current={trip?.status} /></div>
         <div className="direction-row">
           <span className="stop start">{start}</span><DirArrow flipped={dir === 'vuelta'} /><span className="stop end">{end}</span>
         </div>
@@ -86,6 +100,7 @@ export default function StudentPanel({ trip, lastEnded, compact, mobile }) {
         <span>La posición se actualiza automáticamente. Ruta fija entre la Estación Aguacatala y la Entrada Las Hermosas, pasando por el paradero de buses de la Aguacatala.</span>
       </div>
       <Link to="/conductor" className="text-center text-[11px] font-semibold text-gray-400">Soy el conductor</Link>
+      <BrandFoot />
     </>
   );
 }
