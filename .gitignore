@@ -147,3 +147,6 @@ db.sqlite3
 __pycache__/
 *.pyc
 venv/
+
+# Local development tool settings
+.claude/
