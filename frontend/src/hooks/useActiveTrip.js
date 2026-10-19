@@ -22,6 +22,10 @@ export function useActiveTrip(pollMs = POLL_MS) {
       setError(null);
     } catch (e) {
       setError(e.message);
+      // UH4 / NFR disponibilidad: si falla el polling NO se vacia el recorrido ni su
+      // ultima posicion; se conserva lo ultimo recibido y solo se marca que no hay conexion.
+      // La siguiente respuesta exitosa reemplaza el objeto completo (y quita la marca).
+      setTrip((cur) => (cur && !cur.connection_lost ? { ...cur, connection_lost: true } : cur));
     }
   }, []);
 
