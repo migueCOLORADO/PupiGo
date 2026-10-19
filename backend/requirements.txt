@@ -1,3 +1,1 @@
-django>=6.0
-djangorestframework
-django-cors-headers
+-r ../requirements.txt

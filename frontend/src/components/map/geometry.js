@@ -16,6 +16,12 @@ export const MOBILE = {
 };
 
 export const NAMES = {
-  metro: { long: 'Estación Aguacatala', short: 'Metro' },
-  eafit: { long: 'Entrada Las Hermosas', short: 'EAFIT' },
+  metro: {
+    long: 'Metro - Estación Aguacatala',
+    short: 'Metro',
+  },
+  eafit: {
+    long: 'EAFIT - Entrada Las Hermosas',
+    short: 'EAFIT',
+  },
 };

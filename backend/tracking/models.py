@@ -16,6 +16,23 @@ class Route(models.Model):
     def __str__(self):
         return self.name
 
+class Stop(models.Model):
+    route = models.ForeignKey(
+        Route,
+        on_delete=models.CASCADE,
+        related_name="stops"
+    )
+    name = models.CharField(max_length=120)
+    lat = models.FloatField()
+    lng = models.FloatField()
+    order = models.PositiveSmallIntegerField()
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"{self.name} - {self.route.name}"
+
 
 class Vehicle(models.Model):
     plate = models.CharField(max_length=12, unique=True)
@@ -94,7 +111,18 @@ class Trip(models.Model):
 
     @property
     def last_position(self):
+        """UH4: la ultima posicion se conserva en BD; no depende de que sigan llegando lecturas."""
         return self.positions.order_by("-timestamp").first()
+
+    @property
+    def position_age_seconds(self):
+        """UH4 / NFR disponibilidad: segundos desde que el servidor recibio la ultima lectura.
+        Usa received_at (reloj del servidor) para no depender del reloj del dispositivo.
+        None si aun no hay ninguna posicion."""
+        pos = self.last_position
+        if pos is None:
+            return None
+        return max(0, int((timezone.now() - pos.received_at).total_seconds()))
 
 
 class Position(models.Model):

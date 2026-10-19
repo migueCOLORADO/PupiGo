@@ -8,16 +8,21 @@ import DirToggle from './DirToggle';
 import { NAMES } from './map/geometry';
 import { DirArrow } from './map/icons';
 import StatusChip from './StatusChip';
+import StatusHelp from './StatusHelp';
+import Uh9Alert from './Uh9Alert';
+import { BrandFoot } from './BrandSlogan';
 
 function GpsCard({ gps }) {
   const now = useNow();
   const { permission, position, lastSentAt, sendError, request, sharing } = gps;
-  if (permission === 'unavailable') return <div className="alert-danger">Este navegador no soporta geolocalización.</div>;
+  if (permission === 'unavailable') return (
+    <Uh9Alert variant="danger" title="Geolocalizacion no disponible"
+      message="Este navegador no soporta geolocalizacion. Abre PupiGo en un navegador compatible (Chrome, Edge o Safari)." />
+  );
   if (permission === 'denied') return (
-    <div className="alert-danger">
-      Permiso de ubicación rechazado. PupiGo necesita tu ubicación para compartir la posición del colectivo.
-      Actívalo en la configuración del navegador y recarga la página.
-    </div>
+    <Uh9Alert variant="danger" title="Permiso de ubicacion rechazado"
+      message="PupiGo necesita tu ubicacion para compartir la posicion del colectivo. Activala en la configuracion del navegador y recarga la pagina."
+      actionLabel="Recargar pagina" onAction={() => window.location.reload()} />
   );
   if (permission !== 'granted') return (
     <div className="card flex flex-col gap-2.5">
@@ -58,7 +63,7 @@ export default function DriverPanel({ trip, refresh, direction, onDirectionChang
       <div className={`m-card-primary${trip ? '' : ' off'}`}>
         <div className="m-row-top">
           <div className="m-direction"><span className="stop start">{start}</span><DirArrow flipped={dir === 'vuelta'} sw={2.6} /><span className="stop end">{end}</span></div>
-          <StatusChip compact status={status} />
+          <div className="flex items-center gap-2"><StatusHelp current={status} /><StatusChip compact status={status} /></div>
         </div>
         <div className="m-sub">
           {!trip && 'Elige la dirección y pon el recorrido en espera.'}
@@ -86,8 +91,12 @@ export default function DriverPanel({ trip, refresh, direction, onDirectionChang
           <button type="button" className="btn btn-danger" disabled={busy} onClick={() => run(() => api.cancel(trip.id))}>Cancelar recorrido</button>
         </div>
       )}
-      {error && <div className="alert-danger">{error}</div>}
+      {error && (
+        <Uh9Alert variant="danger" title="No se pudo completar la accion"
+          message={error} actionLabel="Reintentar" onAction={() => refresh()} disabled={busy} />
+      )}
       <Link to="/" className={`text-center text-[11px] font-semibold text-gray-400 ${compact ? '' : 'mt-auto'}`}>Ver como estudiante</Link>
+      <BrandFoot />
     </div>
   );
 }

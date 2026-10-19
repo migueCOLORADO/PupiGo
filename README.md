@@ -11,8 +11,18 @@
 5. [Business Goals](#business-goals)
 6. [Alternative Solutions](#alternative-solutions)
 7. [MVP Scope](#mvp-scope)
-8. [Domain Model (MER)](#domain-model-mer)
+8. [Domain Model](#domain-model)
 9. [How to Run](#how-to-run)
+   1. [Requirements](#requirements)
+   2. [Repository Structure](#repository-structure)
+   3. [Backend](#backend)
+   4. [Environment Variables](#environment-variables)
+   5. [Frontend](#frontend)
+   6. [Tests](#tests)
+   7. [Access Routes](#access-routes)
+   8. [Trying a Full Trip](#trying-a-full-trip)
+   9. [Troubleshooting](#troubleshooting)
+   10. [Technical Decisions](#technical-decisions)
 10. [Project Management](#project-management)
 11. [Authors](#authors)
 12. [Course Information](#course-information)
@@ -27,11 +37,11 @@ As a first response, the student community itself organized an informal accompan
 
 However, the solution that ultimately became the most viable for providing calm and safety was transportation managed by the university itself: initially a van with limited capacity, nicknamed by the community as the **"Pupi móvil"**, which covered routes at certain times, and which later evolved into a higher-capacity collective bus (**"el colectivo"**). This solution is still managed completely informally through the WhatsApp group **"Caminantes EAFIT"**, where students ask via a sticker that reads *"¿Por dónde pasa el Pupi móvil?"* ("Where is the Pupi móvil right now?") and wait for someone who has the information to reply.
 
-This dynamic means that students waiting at the meeting points — whether at the university, next to **Las Hermosas**, or at the metro station's stop — depend entirely on someone informed responding in the group in order to make a decision. As a result, they don't know for certain when the bus will arrive, they lose time waiting without reliable information, and in many cases end up walking alone rather than risk missing the transport, exposing themselves again to the very risk that started the whole problem.
+This dynamic means that students waiting at the meeting points, whether at the university, next to **Las Hermosas**, or at the metro station's stop, depend entirely on someone informed responding in the group in order to make a decision. As a result, they don't know for certain when the bus will arrive, they lose time waiting without reliable information, and in many cases end up walking alone rather than risk missing the transport, exposing themselves again to the very risk that started the whole problem.
 
 ### Problem
 
-With the purpose of reducing the uncertainty and waiting times of students who depend on the EAFIT–metro transportation service, the student community requested the development of an information system that provides real-time visibility of the transport, replacing informal chat-based coordination with a formal web platform.
+With the purpose of reducing the uncertainty and waiting times of students who depend on the EAFIT-metro transportation service, the student community requested the development of an information system that provides real-time visibility of the transport, replacing informal chat-based coordination with a formal web platform.
 
 The system must allow **users** to be registered, who can create an account on the platform by providing information such as a unique identifier, full name, institutional email, password, role (student, driver, or administrator), and registration date.
 
@@ -49,14 +59,14 @@ In a later phase, the system must support seat management through **reservations
 
 ### Proposed Solution
 
-**PupiGo** is a web application, accessible from a URL with no installation required, that replaces informal chat-based coordination with a formal, real-time visibility system for the EAFIT–metro transport service. On an interactive map, students can see the collective's current location, the route it is following, and the estimated arrival time at their stop, as well as receive notifications when the bus is nearby.
+**PupiGo** is a web application, accessible from a URL with no installation required, that replaces informal chat-based coordination with a formal, real-time visibility system for the EAFIT-metro transport service. On an illustrated map, students can see the collective's current location, the route it is following and the estimated arrival time; the driver shares the location from the browser.
 
-The solution is built incrementally across sprints, prioritizing first the point of greatest technical uncertainty (real-time tracking) before moving on to user experience features, seat management, and administration:
+The solution is built incrementally across sprints (plan as recorded in the [GitHub Project](https://github.com/users/migueCOLORADO/projects/4)):
 
-- **Sprint 1 (MVP):** real-time location of the collective on a map.
-- **Sprint 2:** notifications and incident reporting.
-- **Sprint 3:** seat management — reservations, waitlist, cancellations, and QR code validation.
-- **Sprint 4:** administrative panel — route, schedule, and driver management, plus statistics.
+- **Sprint 1:** product vision, domain model and mockup.
+- **Sprint 2 (v1.0):** manage a trip and share location (UH1), view the shuttle's status and location (UH2), periodic GPS updates (UH3), GPS permission handling (UH5) and trip cancellation (UH8).
+- **Sprint 3:** last known position (UH4), fixed EAFIT-Metro route with stops (UH6), shuttle direction with driver, plate and route (UH7), brand identity and usable interface (UH9) and an AI assistant for questions about the shuttle (UH10).
+- **Sprint 4 (planned):** estimated time of arrival to a stop (Feature 11), user authentication (Feature 12), notifications (Feature 13), administration of routes, vehicles and drivers (Feature 14) and trip history (Feature 15).
 
 ## Product Vision
 
@@ -64,7 +74,7 @@ Our motivation is to reduce the uncertainty that students experience on their tr
 
 **"Menos espera, más certeza."** *(Less waiting, more certainty.)*
 
-*(See the full Product Vision Board template in `/docs/product-vision-board.png` or the course form link)*
+*(See the Product Vision Board in [`Product Vision/Product Vision Board 3.png`](https://github.com/migueCOLORADO/PupiGo/blob/Sprint-1/Product%20Vision/Product%20Vision%20Board%203.png) on the `Sprint-1` branch.)*
 
 ## Target Group
 
@@ -80,139 +90,213 @@ For the university, this app represents a direct benefit to student wellbeing an
 
 ## Alternative Solutions
 
-The solution considered most viable for providing calm and safety was implementing what was initially named the **"Pupi móvil"**, a van with limited seating that covered routes at certain times. It was later replaced with a higher-capacity collective bus. This is managed through the group called **"Caminantes EAFIT"**, where people ask via a sticker that reads *"Por donde pasa el Pupi móvil"* against a background image of the famous van nicknamed by the community. Through this, people waiting at the university stops — next to **Las Hermosas** — or at the metro — next to the stop by the station — manage to "find out" the transport's location and make decisions accordingly. However, to this day there is no app or formal system that gives them real visibility of the transport; everything depends on someone with the information responding to the sticker in the group and letting those waiting know.
+The solution considered most viable for providing calm and safety was implementing what was initially named the **"Pupi móvil"**, a van with limited seating that covered routes at certain times. It was later replaced with a higher-capacity collective bus. This is managed through the group called **"Caminantes EAFIT"**, where people ask via a sticker that reads *"Por donde pasa el Pupi móvil"* against a background image of the famous van nicknamed by the community. Through this, people waiting at the university stops (next to **Las Hermosas**) or at the metro (next to the stop by the station) manage to "find out" the transport's location and make decisions accordingly. However, to this day there is no app or formal system that gives them real visibility of the transport; everything depends on someone with the information responding to the sticker in the group and letting those waiting know.
 
 ## MVP Scope
 
-Domain entities scoped to Sprint 1 only (see full MER detail in the repository Wiki):
+Domain entities implemented in the backend (`backend/tracking/models.py`):
 
-- **User**
-- **Driver**
-- **Collective**
-- **Route**
-- **Stop**
-- **Trip**
-- **RealTimeLocation**
+- **Route**: fixed route with origin and destination (name and coordinates).
+- **Stop**: stops of a route, in order.
+- **Vehicle**: plate and name of the shuttle.
+- **Driver**: driver name.
+- **Trip**: route, vehicle, driver, direction (Metro to EAFIT or EAFIT to Metro) and status (waiting, in progress, completed, cancelled).
+- **Position**: GPS readings of a trip (latitude, longitude, timestamp).
 
-Out of scope for the MVP (later phases): Notification, Incident Report, Trip History, Reservation, and QR Code Validation.
+Not implemented yet (later phases): users and authentication, notifications, incident reports, trip history, reservations and QR code validation.
 
-## Domain Model (MER)
+## Domain Model
 
-Work on the domain model and upload the image to the repository, or link it from a tool such as LucidChart or Draw.io. It is suggested to upload it directly to the repository's **Wiki**.
+The current relational data model, with entities, attributes and cardinalities, is in the wiki: [1.3. Data Model](https://github.com/migueCOLORADO/PupiGo/wiki/1.-Architecture-and-Data#13-data-model). The deployment and component diagrams are on the same page.
 
-*Link: [Domain Model PupiGo](https://github.com/migueCOLORADO/PupiGo/blob/Sprint-1/Diagrams/domainDPupiGo.pdf) (Sprint-1 branch)*
+The original domain model of Sprint 1 is kept in [`Diagrams/domainDPupiGo.pdf`](https://github.com/migueCOLORADO/PupiGo/blob/Sprint-1/Diagrams/domainDPupiGo.pdf) on the `Sprint-1` branch.
 
 ## How to Run
 
-Backend Django + DRF and frontend React + Tailwind, faithful to the interactive mockup `pupigo-mockup.html`.
+Backend Django + Django REST Framework and frontend React + Vite + Tailwind CSS. Start the backend first and then the frontend.
+
+### Requirements
+
+| Tool | Version used to validate these steps |
+|---|---|
+| Python | 3.13.7 |
+| Node.js / npm | 24.8.0 / 11.4.1 |
+| Git | any recent version |
 
 ### Repository Structure
 
-The app lives at the repo root on `main`; sprint deliverables and resources (diagrams, mockups, documentation) live in their own sprint branches, not on `main`:
-
 ```
-main            backend/, frontend/, pupigo-mockup.html, CONTEXT_v1_Sprint2.md   (application code)
-Sprint-1        Diagrams/, Imgs/, Mockups/, Product Vision/                       (Sprint 1 deliverables)
-Sprint-2        Sprint-2-Resources/Architecture-Data/{Deployment-Diagram,Component-Diagram,Data-Model}/
-                Sprint-2-Resources/Mockups/                                       (Sprint 2 deliverables)
+PupiGo/
+  requirements.txt              Python dependencies (backend)
+  backend/
+    manage.py
+    requirements.txt            includes ../requirements.txt
+    pupigo/                     Django project: settings.py, urls.py, wsgi.py
+    tracking/                   app: models, API views, serializers, AI assistant, seed command, tests
+  frontend/
+    package.json                scripts and dependencies (npm)
+    .env.example                VITE_API_URL
+    src/                        pages, components, map, hooks, api.js
+  UH4_ultima_posicion_conocida.md
+  UH9_identidad_marca_interfaz.md
+  UH10_asistente_ia.md          feature documentation
+  CONTEXT_v1_Sprint2.md         context of the v1 (Sprint 2)
+  pupigo-mockup.html            interactive mockup
+  README.md
 ```
 
-### Requirements
-- Python 3.13 (used in development; 3.11+ should work)
-- Node 18+
-- An active venv at the repo root (`../venv` relative to `backend/` or `frontend/`)
+Branch model: `main` <- `Sprint-N` <- `feature-<n>-<description>`.
 
-### Backend — macOS / Linux / Git Bash
+- `main`: the integrated application; receives each sprint once it is finished, by pull request.
+- `Sprint-N`: integration branch of the sprint; receives the feature branches by pull request. `Sprint-1` and `Sprint-2` keep the deliverables of those sprints.
+- `feature-<n>-<description>`: one branch per Feature (for example `feature-10-asistente-ia`).
+
+### Backend
+
+Run from the repository root.
+
+macOS / Linux / Git Bash:
 
 ```bash
-cd backend
-source ../venv/bin/activate
+python -m venv venv
+source venv/bin/activate              # Git Bash on Windows: source venv/Scripts/activate
 pip install -r requirements.txt
+cd backend
 python manage.py migrate
 python manage.py seed
-python manage.py createsuperuser   # first time only
+python manage.py createsuperuser      # optional, only to use /admin/
 python manage.py runserver 8000
 ```
 
-### Backend — Windows (PowerShell/CMD)
-
-`&&` doesn't work as a separator in PowerShell/CMD — run each line separately:
+Windows PowerShell (run each line separately):
 
 ```powershell
-cd backend
-..\venv\Scripts\Activate.ps1
+python -m venv venv
+.\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+cd backend
 python manage.py migrate
 python manage.py seed
 python manage.py createsuperuser
 python manage.py runserver 8000
 ```
 
-### Frontend (any OS)
+| Command | What it does | Parameters |
+|---|---|---|
+| `python manage.py migrate` | Creates the SQLite database `backend/db.sqlite3` and its tables | - |
+| `python manage.py seed` | Creates the fixed route (Estación Aguacatala - Entrada Las Hermosas) with its 2 stops, the vehicle `PUPI01` and the driver "Conductor PupiGo". Safe to run more than once | No custom parameters |
+| `python manage.py createsuperuser` | Creates an admin user for `/admin/` (asks for user name, email and password) | Optional |
+| `python manage.py runserver 8000` | Starts the API on `http://localhost:8000` | Port (or `address:port`) as argument |
+
+### Environment Variables
+
+`backend/.env` (optional, not stored in the repository):
+
+| Variable | Use | If it is missing |
+|---|---|---|
+| `ASSISTANT_API_KEY` | Key of the AI provider (Anthropic) for the assistant | The assistant answers in automatic mode with the system data, without AI |
+| `ASSISTANT_MODEL` | Model ID used by the assistant | Same as above (both are required to use AI) |
+
+```
+ASSISTANT_API_KEY=<your-key>
+ASSISTANT_MODEL=<model-id>
+```
+
+The backend also reads `DJANGO_SECRET_KEY` and `DJANGO_DEBUG` from the process environment; without them it uses development defaults (`settings.py`).
+
+`frontend/.env` (optional):
+
+| Variable | Use | Default (`frontend/.env.example`) |
+|---|---|---|
+| `VITE_API_URL` | Base URL of the API | `http://localhost:8000/api` |
+
+### Frontend
 
 ```bash
 cd frontend
 npm install
-npm run dev
+npm run dev        # development server on http://localhost:5173
+npm run build      # production build in frontend/dist
+npm run lint       # oxlint
+npm run preview    # serves the build locally
 ```
 
-- Student view: `http://localhost:5173/`
-- Driver view: `http://localhost:5173/conductor` (requires granting geolocation; works on `localhost` without HTTPS on Chrome)
-- Admin: `http://localhost:8000/admin/`
+If port 5173 is in use, Vite takes the next free one and shows it in the terminal.
+
+### Tests
+
+| Command | Result |
+|---|---|
+| `cd backend && python manage.py test` | 25 backend tests (trips API, AI assistant and route stops) |
+| `cd frontend && npm run lint` | Static analysis with oxlint |
+| `cd frontend && npm run build` | Checks that the frontend compiles |
+
+The frontend has no automated test suite (`package.json` has no `test` script).
+
+### Access Routes
+
+| URL | Use |
+|---|---|
+| `http://localhost:5173/` | Student view: trip status, map, assigned shuttle and AI assistant |
+| `http://localhost:5173/conductor` | Driver view: manage the trip and share the GPS location (the browser asks for location permission) |
+| `GET http://localhost:8000/api/` | API index |
+| `GET http://localhost:8000/api/trips/` | List of trips |
+| `POST http://localhost:8000/api/trips/` | Create a trip in "waiting", body `{"direction": "ida"}` or `"vuelta"` |
+| `GET http://localhost:8000/api/trips/{id}/` | Trip detail |
+| `POST http://localhost:8000/api/trips/{id}/start/` | Start the trip |
+| `POST http://localhost:8000/api/trips/{id}/complete/` | Complete the trip |
+| `POST http://localhost:8000/api/trips/{id}/cancel/` | Cancel a waiting or in-progress trip |
+| `POST http://localhost:8000/api/trips/{id}/positions/` | GPS reading, body `{"lat", "lng", "timestamp"}` (only while in progress) |
+| `GET http://localhost:8000/api/trips/active/` | Active trip with its last position, or empty if there is none |
+| `POST http://localhost:8000/api/assistant/` | Ask the assistant, body `{"question": "..."}` |
+| `http://localhost:8000/admin/` | Django admin (requires `createsuperuser`) |
+
+Invalid state transitions respond `409`. Only one active trip can exist at a time.
+
+### Trying a Full Trip
+
+1. Open `http://localhost:5173/conductor`, choose the direction and press **Poner en espera**. The student view (`http://localhost:5173/`) shows the trip "En espera".
+2. Allow the location in the browser and press **Iniciar recorrido**. The driver view sends the GPS position every 5 seconds.
+3. In the student view, the shuttle appears on the map and the status changes to in progress; the assistant answers questions such as "¿Dónde está el colectivo?".
+4. Press **Finalizar recorrido** (or **Cancelar recorrido**) in the driver view. The student view shows that there is no active trip.
 
 ### Troubleshooting
 
 **`["Faltan datos base (route, vehicle, driver). Ejecuta: manage.py seed"]`**
-`python manage.py seed` wasn't run after `migrate`. Run it and refresh.
+`python manage.py seed` was not run after `migrate`. Run it and refresh.
 
 **`Fatal Python error: init_import_site` on `runserver`**
-The venv isn't activated — Django is running on the system's global Python, which may have conflicting packages (e.g. `pip-system-certs`). Activate the venv (steps above) before any `manage.py` command.
+The venv is not activated and Django is running on the system's global Python. Activate the venv before any `manage.py` command.
 
-**Driver panel unresponsive / geolocation rejected**
-The browser must have location permission granted for `localhost`. Check the lock/location icon in the address bar if it was blocked by mistake.
+**Driver panel shows "Permiso de ubicacion rechazado"**
+The browser must allow location for `localhost`. Check the location icon in the address bar and reload the page.
 
-### API
+### Technical Decisions
 
-| Method | Route | UH / RF |
-|---|---|---|
-| POST | `/api/trips/` `{direction: ida\|vuelta}` | creates trip in **Waiting** (RF-04) |
-| POST | `/api/trips/{id}/start/` | **In progress** (RF-05) |
-| POST | `/api/trips/{id}/complete/` | **Completed** (RF-19) |
-| POST | `/api/trips/{id}/cancel/` | **Cancelled** from waiting or in-progress (RF-19b, UH8) |
-| POST | `/api/trips/{id}/positions/` `{lat,lng,timestamp}` | GPS reading, in-progress only (RF-06, UH3) |
-| GET | `/api/trips/active/` | active trip + `last_position`, or `null` (RF-06/07, UH2) |
-
-Invalid transitions respond `409`. Only one active trip can exist at a time.
-
-### Decisions
-
-- **HTTP polling every 5 s** (`useActiveTrip`) instead of WebSockets: a single collective and a fixed route don't justify Django Channels; comfortably meets the 15 s NFR.
-- **GPS submission** (`useDriverGps`): `watchPosition` + a 5 s heartbeat while the trip is in progress, so there's a reading even if the bus is stopped. Permission rejection shows an explicit warning and no sharing is attempted (UH5).
-- **Position on the illustrated map**: the GPS point is projected onto the Aguacatala→Las Hermosas segment (0..1 progress) and placed on the route's SVG `path` via `getPointAtLength`. ViewBox coordinates are converted to container px with `getScreenCTM`, so markers respect the `slice` crop at any size.
-- **Mockup CSS ported 1:1** into `frontend/src/index.css` (tokens and components); Tailwind handles the responsive layout and new utilities. Breakpoints: `<768` mobile (bottom sheet), `768–1023` tablet (map on top, bar below), `≥1024` desktop (74% / 26%).
-- Route coordinates are seeded in `backend/tracking/management/commands/seed.py` (adjust once the real points are refined).
-
-### Pending documentation
-
-- Environment variables / `.env` for production: `SECRET_KEY` and `DJANGO_DEBUG` are currently read from the environment with dev-only defaults in `settings.py` — document real values before deploying.
-
-CORS between backend (`:8000`) and frontend (`:5173`) is already handled: `django-cors-headers` is in `requirements.txt`, installed in `INSTALLED_APPS`/`MIDDLEWARE`, with `CORS_ALLOW_ALL_ORIGINS = True` for local development.
+- **HTTP polling every 5 s** (`useActiveTrip`) instead of WebSockets: one shuttle and a fixed route do not justify Django Channels, and it meets the 15 s latency requirement.
+- **GPS submission** (`useDriverGps`): `watchPosition` plus a 5 s heartbeat while the trip is in progress, so there is a reading even if the bus is stopped.
+- **Illustrated map:** the GPS point is projected onto the route and placed on the SVG `path`, so markers stay on the drawing at any screen size.
+- **AI assistant:** the backend calls the AI provider over HTTPS with Python's standard `urllib` (no extra dependency) and an 8 s timeout; without configuration or on error it answers in automatic mode with the same data (`UH10_asistente_ia.md`).
+- **CORS:** `django-cors-headers` with `CORS_ALLOW_ALL_ORIGINS = True` for local development.
 
 ## Project Management
 
-This project is managed using **GitHub Projects (Kanban)** and **Backlog**, following the **MoSCoW** prioritization method (Must have, Should have, Could have, Won't have) for the user stories in each sprint.
+This project is managed with a **GitHub Project** (backlog and Kanban), following the **MoSCoW** prioritization method (Must have, Should have, Could have, Won't have).
 
-*[Priority board](https://github.com/users/migueCOLORADO/projects/4/views/2)* <br>
-*[Backlog](https://github.com/users/migueCOLORADO/projects/4/views/1)*
+- [GitHub Project](https://github.com/users/migueCOLORADO/projects/4): [Priority board](https://github.com/users/migueCOLORADO/projects/4/views/2), [Backlog](https://github.com/users/migueCOLORADO/projects/4/views/1)
+- [Wiki](https://github.com/migueCOLORADO/PupiGo/wiki): deliverables, backlog with status and responsible, weekly meetings and retrospectives ([Deliverable 3, 5. Project Management](https://github.com/migueCOLORADO/PupiGo/wiki/5.-Project-Management-D3))
 
 ## Authors
 
-**Miguel Ángel Colorado Castaño** <br>
-**Juan Diego Muñoz Buitrago** <br>
-**Daniel Mauricio Giraldo Moreno** <br>
-**Julian Peña Ochoa** <br>
-**Samuel Montoya Espinosa**
+Team **Los Integradores**:
 
+| Member | GitHub |
+|---|---|
+| Miguel Ángel Colorado Castaño | [migueCOLORADO](https://github.com/migueCOLORADO) |
+| Juan Diego Muñoz Buitrago | [mrdidih](https://github.com/mrdidih) |
+| Daniel Mauricio Giraldo Moreno | [dani-g11](https://github.com/dani-g11) |
+| Julian Peña Ochoa | [Kiler56](https://github.com/Kiler56) |
+| Samuel Montoya Espinosa | [Smonto-06](https://github.com/Smonto-06) |
 
 ## Course Information
 **Course:** ST0251 Proyecto Integrador 1 (PI1)

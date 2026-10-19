@@ -8,6 +8,8 @@ export default {
         blue: { DEFAULT: '#2563EB', dark: '#1D4ED8', 50: '#EFF6FF' },
         ink: '#10192B',
         green: { DEFAULT: '#16A34A', bg: '#E9F9EF' },
+        amber: { DEFAULT: '#F6A609', dark: '#B45309', 50: '#FEF3DD' },
+        red: { DEFAULT: '#DC2626', 50: '#FEECEC' },
         gray: { 25: '#FAFBFC', 50: '#F5F7FA', 100: '#EEF1F5', 200: '#E2E6EC', 400: '#9AA3B2', 500: '#6B7280' },
         teal: '#0EA5A5',
         map: { land: '#F3F1EA', road: '#FFFFFF', hwy: '#F6C875', river: '#AEE1F0', block: '#EAE6D9', park: '#DCEBD2' },
