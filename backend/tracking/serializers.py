@@ -1,6 +1,6 @@
 from django.conf import settings
 from rest_framework import serializers
-from .models import Driver, Position, Route, Stop, Trip, Vehicle
+from .models import Driver, Position, Route, Stop, Trip, TripEvent, Vehicle
 
 
 
@@ -75,3 +75,12 @@ class TripSerializer(serializers.ModelSerializer):
         if missing:
             raise serializers.ValidationError("Faltan datos base (%s). Ejecuta: manage.py seed" % ", ".join(missing))
         return super().create(validated)
+
+
+class TripEventSerializer(serializers.ModelSerializer):
+    """Convierte los eventos de recorridos a JSON."""
+
+    class Meta:
+        model = TripEvent
+        fields = ["id", "trip", "event_type", "created_at"]
+        read_only_fields = fields
