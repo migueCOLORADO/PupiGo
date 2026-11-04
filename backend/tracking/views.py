@@ -2,8 +2,8 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from .models import InvalidTransition, Trip
-from .serializers import PositionSerializer, TripSerializer
+from .models import InvalidTransition, Trip, TripEvent, Stop
+from .serializers import PositionSerializer, TripSerializer, TripEventSerializer, StopSerializer
 
 
 class TripViewSet(viewsets.ModelViewSet):
@@ -60,3 +60,37 @@ class TripViewSet(viewsets.ModelViewSet):
         if trip is None:
             return Response(None)
         return Response(self.get_serializer(trip).data)
+
+
+class TripEventViewSet(viewsets.ReadOnlyModelViewSet):
+    """Permite consultar los eventos de los recorridos."""
+
+    queryset = TripEvent.objects.all().order_by("id")
+    serializer_class = TripEventSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        after = self.request.query_params.get("after")
+
+        if after is not None:
+            try:
+                after_id = int(after)
+                if after_id < 0:
+                    raise ValueError
+            except ValueError:
+                raise ValidationError(
+                    {"after": "Debe ser un entero no negativo."}
+                )
+
+            queryset = queryset.filter(id__gt=after_id)
+
+        return queryset
+
+
+class StopViewSet(viewsets.ReadOnlyModelViewSet):
+    """Permite consultar las paradas sin un recorrido activo."""
+
+    queryset = Stop.objects.all().order_by(
+        "route_id", "order", "id"
+    )
+    serializer_class = StopSerializer

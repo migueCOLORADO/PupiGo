@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 
 
@@ -94,20 +94,33 @@ class Trip(models.Model):
             raise InvalidTransition(f"No se puede pasar de {labels[self.status]} a {labels[new_status]}.")
         self.status = new_status
 
+    @transaction.atomic
     def start(self):  # RF-05
         self._transition((self.WAITING,), self.IN_PROGRESS)
         self.started_at = timezone.now()
         self.save(update_fields=["status", "started_at"])
+
+        TripEvent.objects.create(
+            trip=self,
+            event_type=TripEvent.STARTED,
+        )
 
     def complete(self):  # RF-19
         self._transition((self.IN_PROGRESS,), self.COMPLETED)
         self.ended_at = timezone.now()
         self.save(update_fields=["status", "ended_at"])
 
+    @transaction.atomic
     def cancel(self):  # RF-19b
         self._transition(self.ACTIVE_STATUSES, self.CANCELLED)
         self.ended_at = timezone.now()
         self.save(update_fields=["status", "ended_at"])
+
+        TripEvent.objects.create(
+            trip=self,
+            event_type=TripEvent.CANCELLED,
+        )
+
 
     @property
     def last_position(self):
@@ -136,3 +149,43 @@ class Position(models.Model):
     class Meta:
         ordering = ["-timestamp"]
         indexes = [models.Index(fields=["trip", "-timestamp"])]
+
+
+class TripEvent(models.Model):
+    """Registra los eventos que generan notificaciones."""
+
+    STARTED = "started"
+    CANCELLED = "cancelled"
+
+    EVENT_TYPES = [
+        (STARTED, "Recorrido iniciado"),
+        (CANCELLED, "Recorrido cancelado"),
+    ]
+
+    trip = models.ForeignKey(
+        Trip,
+        on_delete=models.CASCADE,
+        related_name="events",
+    )
+
+    event_type = models.CharField(
+        max_length=12,
+        choices=EVENT_TYPES,
+    )
+
+    created_at = models.DateTimeField(
+        default=timezone.now,
+        db_index=True,
+    )
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["trip", "event_type"],
+                name="unique_trip_event_type",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.trip_id} - {self.event_type}"
