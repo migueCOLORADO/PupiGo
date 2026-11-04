@@ -3,6 +3,10 @@ from django.db import models
 from django.utils import timezone
 
 
+# UH14 (RF-43, RF-44, RF-45): los registros que administra el administrador
+# (rutas, paradas, vehiculos y conductores) se desactivan en lugar de borrarse.
+# Un registro con is_active=False deja de estar disponible para recorridos
+# nuevos, pero los recorridos ya realizados que lo referencian se conservan.
 class Route(models.Model):
     """Ruta fija Estacion Aguacatala <-> Entrada Las Hermosas (EAFIT)."""
     name = models.CharField(max_length=120)
@@ -12,6 +16,7 @@ class Route(models.Model):
     destination_name = models.CharField(max_length=120)
     destination_lat = models.FloatField()
     destination_lng = models.FloatField()
+    is_active = models.BooleanField("activo", default=True)
 
     def __str__(self):
         return self.name
@@ -26,6 +31,7 @@ class Stop(models.Model):
     lat = models.FloatField()
     lng = models.FloatField()
     order = models.PositiveSmallIntegerField()
+    is_active = models.BooleanField("activo", default=True)
 
     class Meta:
         ordering = ["order", "id"]
@@ -37,6 +43,7 @@ class Stop(models.Model):
 class Vehicle(models.Model):
     plate = models.CharField(max_length=12, unique=True)
     name = models.CharField(max_length=60, default="Pupi Bus")
+    is_active = models.BooleanField("activo", default=True)
 
     def __str__(self):
         return f"{self.name} ({self.plate})"
@@ -44,6 +51,7 @@ class Vehicle(models.Model):
 
 class Driver(models.Model):
     name = models.CharField(max_length=120)
+    is_active = models.BooleanField("activo", default=True)
 
     def __str__(self):
         return self.name
@@ -136,3 +144,4 @@ class Position(models.Model):
     class Meta:
         ordering = ["-timestamp"]
         indexes = [models.Index(fields=["trip", "-timestamp"])]
+
