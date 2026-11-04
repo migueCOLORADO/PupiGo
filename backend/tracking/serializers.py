@@ -11,11 +11,16 @@ class StopSerializer(serializers.ModelSerializer):
 
 
 class RouteSerializer(serializers.ModelSerializer):
-    stops = StopSerializer(many=True, read_only=True)
+    stops = serializers.SerializerMethodField()
 
     class Meta:
         model = Route
         fields = "__all__"
+
+    def get_stops(self, obj):
+        # UH14: una parada desactivada deja de publicarse para recorridos nuevos,
+        # pero la fila se conserva en BD (no se borra el historico).
+        return StopSerializer(obj.stops.filter(is_active=True), many=True).data
 
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -66,12 +71,33 @@ class TripSerializer(serializers.ModelSerializer):
         # UH4: el cliente compara contra gps_max_interval_seconds para marcar "desactualizada"
         return obj.position_age_seconds
 
+    # UH14 / RF-45: un recorrido nuevo solo puede usar registros activos.
+    # (campo en validated_data, etiqueta para el mensaje, modelo)
+    REQUIRED_RECORDS = (
+        ("route", "ruta", Route),
+        ("vehicle", "vehiculo", Vehicle),
+        ("driver", "conductor", Driver),
+    )
+
     def create(self, validated):
-        # Defaults al primer registro sembrado (ruta fija Sprint 2)
-        validated.setdefault("route", Route.objects.first())
-        validated.setdefault("vehicle", Vehicle.objects.first())
-        validated.setdefault("driver", Driver.objects.first())
-        missing = [k for k in ("route", "vehicle", "driver") if validated[k] is None]
-        if missing:
-            raise serializers.ValidationError("Faltan datos base (%s). Ejecuta: manage.py seed" % ", ".join(missing))
+        errors, falta_alguno = [], False
+        for field, label, model in self.REQUIRED_RECORDS:
+            chosen = validated.get(field)
+            if chosen is None:
+                # Sin seleccion explicita se usa el primer registro activo (ruta fija Sprint 2)
+                chosen = model.objects.filter(is_active=True).order_by("id").first()
+                if chosen is None:
+                    errors.append("falta un registro de %s activo" % label)
+                    falta_alguno = True
+                    continue
+                validated[field] = chosen
+            elif not chosen.is_active:
+                # RF-45: el registro existe pero el administrador lo desactivo (UH14)
+                errors.append("el registro de %s '%s' esta desactivado" % (label, chosen))
+        if errors:
+            detail = "No se puede crear el recorrido: %s." % "; ".join(errors)
+            if falta_alguno:
+                detail += " Ejecuta: manage.py seed"
+            raise serializers.ValidationError({"detail": detail})
         return super().create(validated)
+
