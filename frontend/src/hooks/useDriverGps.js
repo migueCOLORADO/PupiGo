@@ -5,9 +5,29 @@ import { api } from '../api';
 // Un heartbeat reenvia la ultima lectura si el GPS no emite (bus detenido) para cumplir el NFR de 15 s.
 export const SEND_MS = 5000;
 
-// permission: 'unknown' | 'granted' | 'denied' | 'unavailable' | 'error'
+const hasGeo = () => typeof navigator !== 'undefined' && 'geolocation' in navigator;
+// Solo es false cuando el navegador lo afirma (http fuera de localhost); si no existe la propiedad se asume seguro.
+const isSecure = () => typeof window === 'undefined' || window.isSecureContext !== false;
+
+function initialPermission() {
+  if (!isSecure()) return 'insecure';
+  if (!hasGeo()) return 'unavailable';
+  return 'unknown';
+}
+
+async function queryPermissionState() {
+  try {
+    if (!navigator.permissions?.query) return null;
+    const s = await navigator.permissions.query({ name: 'geolocation' });
+    return s?.state || null;
+  } catch {
+    return null;
+  }
+}
+
+// permission: 'unknown' | 'granted' | 'denied' | 'unavailable' | 'insecure' | 'error'
 export function useDriverGps({ trip }) {
-  const [permission, setPermission] = useState('unknown');
+  const [permission, setPermission] = useState(initialPermission);
   const [position, setPosition] = useState(null);
   const [lastSentAt, setLastSentAt] = useState(null);
   const [sendError, setSendError] = useState(null);
@@ -24,18 +44,29 @@ export function useDriverGps({ trip }) {
       .catch((e) => setSendError(e.message));
   }, []);
 
-  const request = useCallback(() => {
-    if (!('geolocation' in navigator)) { setPermission('unavailable'); return; }
-    navigator.geolocation.getCurrentPosition(
-      () => setPermission('granted'),
-      (err) => setPermission(err.code === 1 ? 'denied' : 'error'),
-      { enableHighAccuracy: true, timeout: 10000 },
-    );
+  // UH19 #241: se llama al iniciar el recorrido para que el navegador muestre la solicitud de permiso.
+  // Devuelve el estado final para que el llamador no inicie el recorrido sin permiso (UH5).
+  const request = useCallback(async () => {
+    const pre = initialPermission();
+    if (pre !== 'unknown') { setPermission(pre); return pre; }
+    if ((await queryPermissionState()) === 'denied') { setPermission('denied'); return 'denied'; }
+    const result = await new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (p) => {
+          setPosition({ lat: p.coords.latitude, lng: p.coords.longitude, timestamp: new Date(p.timestamp).toISOString() });
+          resolve('granted');
+        },
+        (err) => resolve(err?.code === 1 ? 'denied' : 'error'),
+        { enableHighAccuracy: true, timeout: 10000 },
+      );
+    });
+    setPermission(result);
+    return result;
   }, []);
 
   // Detecta permiso ya concedido/rechazado sin volver a preguntar.
   useEffect(() => {
-    if (!navigator.permissions?.query) return;
+    if (initialPermission() !== 'unknown' || !navigator.permissions?.query) return;
     navigator.permissions.query({ name: 'geolocation' }).then((s) => {
       const apply = () => {
         if (s.state === 'granted') setPermission('granted');
@@ -71,5 +102,5 @@ export function useDriverGps({ trip }) {
     return () => clearInterval(id);
   }, [sharing, permission, position, send]);
 
-  return { permission, position, lastSentAt, sendError, request, sharing };
+  return { permission, position, lastSentAt, sendError, request, sharing, secureContext: isSecure(), hasGeolocation: hasGeo() };
 }

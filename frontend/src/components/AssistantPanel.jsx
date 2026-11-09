@@ -1,4 +1,5 @@
 // UH10 #119: asistente para preguntas sobre el colectivo. Si falla, el mapa y el estado siguen intactos.
+// UH19 #241 / RF #244: no se muestra result.notice ni texto de modo automatico cuando source no es "ai".
 import { useState } from 'react';
 import Uh9Alert from './Uh9Alert';
 
@@ -44,7 +45,7 @@ export default function AssistantPanel() {
 
   return (
     <div className="card flex flex-col gap-3">
-      <div className="text-[13px] font-bold text-ink">Pregúntale al asistente</div>
+      <div className="text-[13px] font-bold text-ink">Asistente PupiGo</div>
       <form onSubmit={send} className="flex flex-col gap-2 sm:flex-row">
         <label htmlFor="assistant-q" className="sr-only">Pregunta sobre el colectivo</label>
         <input id="assistant-q" type="text" value={question} maxLength={MAX} disabled={loading}
@@ -63,11 +64,10 @@ export default function AssistantPanel() {
 
       {result && !error && (
         <div className="flex flex-col gap-2" aria-live="polite">
-          {result.notice && <Uh9Alert variant="warn" message={result.notice} />}
           <p className="text-[13px] leading-relaxed text-ink">{result.answer}</p>
-          <span className="text-[11px] font-semibold text-gray-400">
-            {result.source === 'ai' ? 'Respuesta generada con IA a partir de los datos del sistema' : 'Respuesta automática con los datos del sistema'}
-          </span>
+          {result.source === 'ai' && (
+            <span className="text-[11px] font-semibold text-gray-400">Respuesta generada con IA a partir de los datos del sistema</span>
+          )}
         </div>
       )}
     </div>
