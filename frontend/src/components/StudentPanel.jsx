@@ -22,7 +22,6 @@
  * clases que ya existen en index.css (`card`, `panel-title`, `m-row-cards`,
  * `m-mini-card`, `m-mini-text`) para no inventar estilos nuevos.
  */
-import { Link } from 'react-router-dom';
 import { useNow } from '../hooks/useNow';
 import { etaMinutes } from '../lib/geo';
 import { formatAgo, secondsSince } from '../lib/time';
@@ -144,7 +143,6 @@ export default function StudentPanel({ trip, lastEnded, compact, mobile, error, 
           </div>
         </div>
         <AssistantPanel />
-        {mobile && <Link to="/conductor" className="text-center text-[11px] font-semibold text-gray-400">Soy el conductor</Link>}
         <BrandFoot />
       </>
     );
@@ -199,7 +197,6 @@ export default function StudentPanel({ trip, lastEnded, compact, mobile, error, 
         <span>La posición se actualiza automáticamente. Ruta fija entre la Estación Aguacatala y la Entrada Las Hermosas, pasando por el paradero de buses de la Aguacatala.</span>
       </div>
       <AssistantPanel />
-      <Link to="/conductor" className="text-center text-[11px] font-semibold text-gray-400">Soy el conductor</Link>
       <BrandFoot />
     </>
   );
