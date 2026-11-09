@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   isValidLength, wrapIndex, clampIndex, nextIndex, prevIndex, reachableCount, indexFromScroll,
+  centerScrollLeft, nearestIndex, edgeZone,
 } from './carousel.js';
 
 test('camino feliz: siguiente y anterior avanzan de a uno', () => {
@@ -104,4 +105,47 @@ test('Monte Carlo: 500 secuencias aleatorias de siguiente/anterior nunca salen d
     }
   }
   assert.ok(steps >= SEQUENCES);
+});
+
+test('camino feliz: centerScrollLeft centra la diapositiva activa', () => {
+  // viewport 1000, diapositiva de 850 en x=1000: queda centrada con 75 px a cada lado
+  assert.equal(centerScrollLeft(1000, 850, 1000, 5000), 925);
+  assert.equal(centerScrollLeft(75, 850, 1000, 5000), 0);
+});
+
+test('borde: centerScrollLeft se acota a [0, maxScroll]', () => {
+  assert.equal(centerScrollLeft(0, 850, 1000, 5000), 0);
+  assert.equal(centerScrollLeft(9000, 850, 1000, 2000), 2000);
+  assert.equal(centerScrollLeft(500, 850, 1000, -10), 0);
+});
+
+test('entrada invalida: centerScrollLeft con NaN no rompe y queda en rango', () => {
+  assert.equal(centerScrollLeft(NaN, undefined, '1000', null), 0);
+});
+
+test('nearestIndex elige el centro mas cercano', () => {
+  const centers = [500, 1400, 2300, 3200];
+  assert.equal(nearestIndex(500, centers), 0);
+  assert.equal(nearestIndex(1300, centers), 1);
+  assert.equal(nearestIndex(99999, centers), 3);
+  assert.equal(nearestIndex(-50, centers), 0);
+  assert.equal(nearestIndex(NaN, centers), 0);
+  assert.throws(() => nearestIndex(10, []), RangeError);
+  assert.throws(() => nearestIndex(10, null), RangeError);
+});
+
+test('edgeZone detecta la franja del 10 % de cada borde', () => {
+  assert.equal(edgeZone(0, 1440), 'left');
+  assert.equal(edgeZone(144, 1440), 'left');
+  assert.equal(edgeZone(145, 1440), null);
+  assert.equal(edgeZone(720, 1440), null);
+  assert.equal(edgeZone(1296, 1440), 'right');
+  assert.equal(edgeZone(1440, 1440), 'right');
+  assert.equal(edgeZone(1295, 1440), null);
+});
+
+test('entrada invalida: edgeZone devuelve null', () => {
+  for (const args of [[NaN, 100], [10, 0], [10, -5], ['10', 100], [-1, 100], [101, 100], [10, 100, 0], [10, 100, 0.6]]) {
+    assert.equal(edgeZone(...args), null, `args=${JSON.stringify(args)}`);
+  }
 });
