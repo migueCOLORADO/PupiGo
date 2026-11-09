@@ -5,6 +5,23 @@
 .tablet-infobar{align-items:flex-start}
 .side-col{min-height:0}
 
+/* ===== UH18: vistas a 100dvh sin scroll de pagina y tarjeta movil arrastrable ===== */
+/* position:relative contiene descendientes absolutos (p. ej. el label .sr-only del asistente):
+   sin contenedor posicionado escapaban del overflow de .side-col y alargaban el documento (recuadro blanco en PC). */
+.pupi-app{position:relative;height:100vh;height:100dvh;overflow:hidden}
+.side-col{position:relative}
+.m-app{display:flex;flex-direction:column;background:var(--white)}
+.sheet{padding:0 16px;gap:0;overflow:hidden;transition:height .25s ease}
+.sheet.dragging{transition:none}
+.sheet-grip{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0 8px;touch-action:none;cursor:grab;user-select:none}
+.sheet.dragging .sheet-grip{cursor:grabbing}
+.sheet-grip .sheet-handle{margin:0 auto}
+.sheet-toggle{border:0;background:var(--gray-100);color:var(--gray-500);font:inherit;font-size:11px;font-weight:700;min-height:30px;padding:6px 14px;border-radius:999px;cursor:pointer;touch-action:manipulation}
+.sheet-toggle:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.sheet-body{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding-bottom:18px;overflow:hidden}
+.sheet[data-state="expanded"] .sheet-body{overflow-y:auto;overscroll-behavior:contain}
+@media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+
 /* Estado "apagado" (sin recorrido activo / sin señal) */
 .live-pill.off,.m-live.off{background:var(--gray-100);color:var(--gray-500)}
 .live-pill.off .pulse,.m-live.off .pulse{background:var(--gray-400)}
