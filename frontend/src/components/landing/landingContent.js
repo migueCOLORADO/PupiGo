@@ -1,16 +1,22 @@
 // UH16 #219: textos del carrusel. Fuente: README.md del proyecto (Context, Proposed Solution,
 // Product Vision, Access Routes, Trying a Full Trip, Authors y Course Information).
-import imgQuienes from '../../assets/landing/quienes-somos.svg';
+import imgQuienes from '../../assets/logo.png';
 import imgComoUsar from '../../assets/landing/como-usar.svg';
-import imgConductores from '../../assets/landing/conductores.svg';
-import imgVision from '../../assets/landing/vision.svg';
+import imgConductores from '../../assets/landing/fondoConductor.jpg';
+import imgVision from '../../assets/landing/nuestraVision.jpg';
+
+// fit 'contain': la imagen se muestra completa y centrada sobre el color bg (logo e ilustracion).
+// whiten: aclara el fondo gris muy claro del logo (#F7F7F7) para que se funda con el blanco.
 
 export const LANDING_CARDS = [
   {
     id: 'quienes-somos',
     title: 'Quiénes somos',
     image: imgQuienes,
-    alt: 'Ilustración de estudiantes caminando juntos hacia el colectivo',
+    fit: 'contain',
+    bg: '#FFFFFF',
+    whiten: true,
+    alt: 'Logo de PupiGo',
     summary: 'PupiGo nace de la comunidad EAFIT que se mueve entre la universidad y el metro, la misma que creó Caminantes y le puso nombre al Pupi móvil.',
     detail: [
       'Durante varios semestres la comunidad estudiantil de EAFIT reportó robos en el trayecto entre la universidad y la estación del metro, sobre todo en la tarde y la noche. Como primera respuesta los estudiantes crearon "Caminantes": coordinaban la salida por chat y caminaban juntos.',
@@ -23,6 +29,8 @@ export const LANDING_CARDS = [
     id: 'como-usar',
     title: 'Cómo usar la app',
     image: imgComoUsar,
+    fit: 'contain',
+    bg: '#F3F1EA',
     alt: 'Ilustración de un celular con el mapa de la ruta y el colectivo',
     summary: 'Abre PupiGo desde el enlace, sin instalar nada, y mira en el mapa dónde va el colectivo, su ruta y su estado.',
     detail: [
@@ -37,7 +45,7 @@ export const LANDING_CARDS = [
     id: 'conductores',
     title: 'Para conductores',
     image: imgConductores,
-    alt: 'Ilustración de un volante con el pin de ubicación GPS',
+    alt: 'Ilustración de un conductor al volante del colectivo',
     summary: 'El conductor gestiona el viaje y comparte su ubicación GPS desde el navegador mientras hace el recorrido.',
     detail: [
       'En la vista del conductor eliges el sentido del viaje (Metro a EAFIT o EAFIT a Metro) y presionas "Poner en espera". Los estudiantes ven el viaje "En espera".',
@@ -50,7 +58,7 @@ export const LANDING_CARDS = [
     id: 'vision',
     title: 'Nuestra visión',
     image: imgVision,
-    alt: 'Ilustración de un reloj junto a una marca de verificación',
+    alt: 'Campus de la Universidad EAFIT con estudiantes caminando entre los edificios',
     summary: 'Menos espera, más certeza: que cada estudiante sepa cuándo llega el colectivo y pueda planear su salida.',
     detail: [
       'Queremos reducir la incertidumbre de los estudiantes en el trayecto entre EAFIT y el metro, con información clara y oportuna sobre el transporte.',

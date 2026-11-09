@@ -1,33 +1,66 @@
-// UH16 #219: keyframes propios de la landing. Van aqui (y no en index.css) para no tocar estilos globales.
+// UH16 #219: estilos propios de la landing. Van aqui (y no en index.css) para no tocar estilos globales.
 // prefers-reduced-motion: reduce apaga todas las animaciones y transiciones dentro de .pupi-motion.
 const CSS = `
-@keyframes pupi-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-@keyframes pupi-spin { to { transform: rotate(360deg); } }
-@keyframes pupi-road { to { stroke-dashoffset: -70; } }
-@keyframes pupi-drift { from { transform: translateX(-260px); } to { transform: translateX(1460px); } }
-@keyframes pupi-load { from { stroke-dashoffset: 302; } to { stroke-dashoffset: 0; } }
-@keyframes pupi-pop { 0% { transform: scale(1); } 35% { transform: scale(0.88); } 100% { transform: scale(1.14); } }
-@keyframes pupi-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
-@keyframes pupi-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pupi-press { 0% { transform: scale(1); } 40% { transform: scale(0.9); } 100% { transform: scale(1.06); } }
+@keyframes pupi-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pupi-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes pupi-dialog-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+@keyframes pupi-dialog-out { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.96); } }
 
-.pupi-bob { animation: pupi-bob 1.6s ease-in-out infinite; }
-.pupi-wheel { transform-box: fill-box; transform-origin: center; animation: pupi-spin 1.1s linear infinite; }
-.pupi-road { animation: pupi-road 0.9s linear infinite; }
-.pupi-cloud { animation: pupi-drift 48s linear infinite; }
-.pupi-cloud-slow { animation: pupi-drift 70s linear infinite; animation-delay: -30s; }
+/* Encabezado: panel de vidrio esmerilado */
+.pupi-glass {
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 20px 50px rgba(16, 25, 43, 0.25);
+}
 
-.pupi-go-ring { opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity 0.2s ease; }
-.pupi-go:hover .pupi-go-ring,
-.pupi-go:focus-visible .pupi-go-ring { opacity: 1; animation: pupi-spin 0.9s linear infinite; }
-.pupi-go-progress { opacity: 0; }
-.pupi-go[data-phase="launching"] .pupi-go-ring { opacity: 0; animation: none; }
-.pupi-go[data-phase="launching"] .pupi-go-progress { opacity: 1; animation: pupi-load 0.8s ease-out forwards; }
-.pupi-go[data-phase="launching"] .pupi-go-core { animation: pupi-pop 0.8s ease-out forwards; }
+/* Boton GO */
+.pupi-go {
+  background: rgba(16, 25, 43, 0.42);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(16, 25, 43, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.pupi-go[data-phase="pressing"] { animation: pupi-press 0.26s ease-out forwards; }
+.pupi-go-ring { transition: opacity 0.2s ease; }
+.pupi-go-ring[data-visible="false"] { opacity: 0; }
+.pupi-go-ring[data-visible="true"] { opacity: 1; }
 
-.pupi-dialog { animation: pupi-in 0.22s ease-out; }
-.pupi-backdrop { animation: pupi-fade 0.2s ease-out; }
+/* Carrusel: sin barra de desplazamiento; el dedo, las flechas y el teclado siguen funcionando */
+.pupi-track { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
+.pupi-track::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.pupi-slide { transition: opacity 0.35s ease, transform 0.35s ease; }
+.pupi-slide[data-active="false"] { opacity: 0.6; transform: scale(0.97); }
+.pupi-arrow { transition: opacity 0.2s ease, transform 0.2s ease; }
+.pupi-arrow[data-visible="false"] { opacity: 0; pointer-events: none; transform: translateY(-50%) scale(0.9); }
+.pupi-arrow[data-visible="true"] { opacity: 1; transform: translateY(-50%) scale(1); }
 
-.pupi-track { scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+/* Detalle (Ampliar) */
+.pupi-backdrop {
+  background: rgba(16, 25, 43, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  animation: pupi-fade-in 0.25s ease-out;
+}
+.pupi-backdrop[data-state="closing"] { animation: pupi-fade-out 0.2s ease-in forwards; }
+.pupi-dialog {
+  width: min(92vw, 1200px);
+  height: min(88vh, 900px);
+  height: min(88dvh, 900px);
+  display: flex;
+  flex-direction: column;
+  animation: pupi-dialog-in 0.25s ease-out;
+}
+.pupi-dialog[data-state="closing"] { animation: pupi-dialog-out 0.2s ease-in forwards; }
+.pupi-dialog-media { flex: 0 0 38%; min-height: 0; }
+.pupi-dialog-body { flex: 1 1 auto; min-height: 0; min-width: 0; }
+@media (orientation: landscape) {
+  .pupi-dialog { flex-direction: row; }
+  .pupi-dialog-media { flex: 0 0 44%; height: 100%; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .pupi-motion *, .pupi-motion *::before, .pupi-motion *::after {
