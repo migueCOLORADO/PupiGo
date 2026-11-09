@@ -2,6 +2,7 @@
 # Contexto de build: raiz del repositorio (requirements.txt vive ahi).
 #   docker build -f backend/Dockerfile -t pupigo-backend .
 FROM python:3.13-slim
+LABEL org.opencontainers.image.version="2.0.0"
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -31,5 +32,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=5 \
     CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/', timeout=4).status == 200 else 1)"
 
-# Al arrancar: migraciones, datos base (idempotente), estaticos del admin y Gunicorn.
-CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed && python manage.py collectstatic --noinput && exec gunicorn pupigo.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 4 --timeout 30 --access-logfile -"]
+# Al arrancar: migraciones, datos base y usuarios demo (idempotentes), estaticos del admin y Gunicorn.
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed && python manage.py seed_users && python manage.py collectstatic --noinput && exec gunicorn pupigo.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 4 --timeout 30 --access-logfile -"]

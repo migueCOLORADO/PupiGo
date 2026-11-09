@@ -14,10 +14,14 @@ COPY . .
 # Asi la imagen sirve igual en localhost y en la IP publica de EC2 (que cambia en AWS Academy).
 ARG VITE_API_URL=/api
 ENV VITE_API_URL=${VITE_API_URL}
+# Llave del navegador para Google Maps (opcional; vacia = mapa SVG de respaldo).
+ARG VITE_GOOGLE_MAPS_API_KEY=
+ENV VITE_GOOGLE_MAPS_API_KEY=${VITE_GOOGLE_MAPS_API_KEY}
 RUN npm run build
 
 # ---- Etapa 2: runtime ----
 FROM nginx:stable-alpine
+LABEL org.opencontainers.image.version="2.0.0"
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 
