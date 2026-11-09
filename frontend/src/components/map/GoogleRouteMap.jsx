@@ -1,27 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { boundsFromPoints, clampToBounds, contains } from '../../lib/bounds';
+import { IDA, REGRESO, toLatLngPath } from '../../lib/routePaths';
 import { loadGoogleMaps, onGoogleMapsAuthFailure } from './loadGoogleMaps';
 import { routeZone } from './routeZone';
 import { isPositionStale, liveLabel } from './status';
 
 const COLORS = { ida: '#2563EB', regreso: '#16A34A', stale: '#9AA3B2', waiting: '#F59E0B', white: '#FFFFFF', stop: '#10192B' };
-// Desplazamiento lateral (grados) para que ida y regreso no se dibujen uno encima del otro.
-const LANE_OFFSET_DEG = 0.00006;
-
-// Camino origen -> paradas intermedias -> destino, sin repetir puntos.
-function buildPath(zone) {
-  const pts = [zone.origin, ...zone.stops, zone.destination];
-  return pts.filter((p, i) => i === 0 || Math.abs(p.lat - pts[i - 1].lat) > 1e-7 || Math.abs(p.lng - pts[i - 1].lng) > 1e-7)
-    .map(({ lat, lng }) => ({ lat, lng }));
-}
-
-function offsetPath(path, offset) {
-  const a = path[0], b = path[path.length - 1];
-  const dx = b.lng - a.lng, dy = b.lat - a.lat;
-  const len = Math.hypot(dx, dy) || 1;
-  const nx = -dy / len, ny = dx / len; // normal unitaria
-  return path.map((p) => ({ lat: p.lat + ny * offset, lng: p.lng + nx * offset }));
-}
+// Trazado real por las calles (lib/routePaths.js) en formato { lat, lng }.
+const IDA_PATH = toLatLngPath(IDA);
+const REGRESO_PATH = toLatLngPath(REGRESO);
 
 function busPosition(trip, zone) {
   const pos = trip?.last_position;
@@ -95,22 +82,18 @@ export default function GoogleRouteMap({ trip, mobile = false, apiKey, onFail })
     const map = mapRef.current, maps = window.google?.maps;
     if (!ready || !map || !maps) return;
     map.setOptions({ restriction: { latLngBounds: zone.bounds, strictBounds: true } });
-    const path = buildPath(zone);
-    map.fitBounds(boundsFromPoints(path, 0.0008));
+    map.fitBounds(boundsFromPoints([...IDA_PATH, ...REGRESO_PATH], 0.0008));
 
+    // Sentido seleccionado: linea solida con flechas. El otro sentido: linea punteada y tenue.
     const arrow = (color) => ({ path: maps.SymbolPath.FORWARD_CLOSED_ARROW, scale: 2.5, strokeColor: color, fillColor: color, fillOpacity: 1 });
-    const dash = { path: 'M 0,-1 0,1', strokeOpacity: 1, strokeColor: COLORS.regreso, scale: 3 };
-    const direction = trip?.direction;
-    const ida = new maps.Polyline({
-      map, path: offsetPath(path, LANE_OFFSET_DEG), strokeColor: COLORS.ida, strokeWeight: 5,
-      strokeOpacity: direction === 'vuelta' ? 0.45 : 0.9,
-      icons: [{ icon: arrow(COLORS.ida), offset: '50%' }],
-    });
-    const regreso = new maps.Polyline({
-      map, path: offsetPath([...path].reverse(), LANE_OFFSET_DEG), strokeOpacity: 0,
-      icons: [{ icon: { ...dash, strokeOpacity: direction === 'vuelta' ? 1 : 0.6 }, offset: '0', repeat: '14px' },
-        { icon: arrow(COLORS.regreso), offset: '50%' }],
-    });
+    const line = (path, color, selected) => new maps.Polyline(selected
+      ? { map, path, strokeColor: color, strokeWeight: 5, strokeOpacity: 0.9, zIndex: 2,
+        icons: [{ icon: arrow(color), offset: '12.5%', repeat: '25%' }] }
+      : { map, path, strokeOpacity: 0, zIndex: 1,
+        icons: [{ icon: { path: 'M 0,-1 0,1', strokeOpacity: 0.45, strokeColor: color, scale: 3 }, offset: '0', repeat: '14px' }] });
+    const vuelta = trip?.direction === 'vuelta';
+    const ida = line(IDA_PATH, COLORS.ida, !vuelta);
+    const regreso = line(REGRESO_PATH, COLORS.regreso, vuelta);
     const stopPoints = [
       { ...zone.origin, label: 'M' },
       ...zone.stops.filter((s) => ![zone.origin, zone.destination].some((e) => Math.abs(e.lat - s.lat) < 1e-7 && Math.abs(e.lng - s.lng) < 1e-7)),
