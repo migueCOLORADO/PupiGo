@@ -1,0 +1,21 @@
+# Contexto del backend (raiz del repo). Solo se necesitan requirements.txt y backend/.
+.git
+.gitignore
+.dockerignore
+.env
+.env.*
+**/.env
+**/.env.*
+frontend
+venv
+**/__pycache__
+**/*.pyc
+**/db.sqlite3
+backend/staticfiles
+backend/Dockerfile
+docker-compose*.yml
+*.md
+pupigo-mockup.html
+.claude
+.kiro
+.vscode
