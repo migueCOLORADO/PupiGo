@@ -1,8 +1,10 @@
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .models import InvalidTransition, Trip
+from .permissions import IsDriver
 from .serializers import PositionSerializer, TripSerializer
 
 
@@ -18,6 +20,12 @@ class TripViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.select_related("route", "vehicle", "driver")
     serializer_class = TripSerializer
     http_method_names = ["get", "post", "head", "options"]
+
+    def get_permissions(self):
+        # RF #132: lectura abierta; crear y operar el recorrido solo conductores.
+        if self.action in ("list", "retrieve", "active"):
+            return [AllowAny()]
+        return [IsDriver()]
 
     def perform_create(self, serializer):
         if Trip.objects.filter(status__in=Trip.ACTIVE_STATUSES).exists():
