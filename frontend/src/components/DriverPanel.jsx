@@ -4,6 +4,7 @@ import { api } from '../api';
 import { useDriverGps } from '../hooks/useDriverGps';
 import { useNow } from '../hooks/useNow';
 import { formatAgo, secondsSince } from '../lib/time';
+import { geoPermissionMessage } from '../lib/geoPermission';
 import DirToggle from './DirToggle';
 import { NAMES } from './map/geometry';
 import { DirArrow } from './map/icons';
@@ -12,24 +13,31 @@ import StatusHelp from './StatusHelp';
 import Uh9Alert from './Uh9Alert';
 import { BrandFoot } from './BrandSlogan';
 
+function GeoSteps({ steps }) {
+  if (!steps.length) return null;
+  return (
+    <ol className="list-decimal pl-4 flex flex-col gap-1">
+      {steps.map((s) => <li key={s}>{s}</li>)}
+    </ol>
+  );
+}
+
+// UH19 #241 / RF #243: guia al conductor segun el estado del permiso (negado, sin HTTPS, sin GPS).
 function GpsCard({ gps }) {
   const now = useNow();
-  const { permission, position, lastSentAt, sendError, request, sharing } = gps;
-  if (permission === 'unavailable') return (
-    <Uh9Alert variant="danger" title="Geolocalizacion no disponible"
-      message="Este navegador no soporta geolocalizacion. Abre PupiGo en un navegador compatible (Chrome, Edge o Safari)." />
-  );
-  if (permission === 'denied') return (
-    <Uh9Alert variant="danger" title="Permiso de ubicacion rechazado"
-      message="PupiGo necesita tu ubicacion para compartir la posicion del colectivo. Activala en la configuracion del navegador y recarga la pagina."
-      actionLabel="Recargar pagina" onAction={() => window.location.reload()} />
-  );
-  if (permission !== 'granted') return (
+  const { permission, position, lastSentAt, sendError, request, sharing, secureContext, hasGeolocation } = gps;
+  const msg = geoPermissionMessage({ permission, secureContext, hasGeolocation });
+  if (msg.tone === 'danger' || msg.tone === 'warn') {
+    const action = permission === 'denied'
+      ? { actionLabel: 'Recargar pagina', onAction: () => window.location.reload() }
+      : permission === 'error' ? { actionLabel: 'Reintentar', onAction: request } : {};
+    return <Uh9Alert variant={msg.tone} title={msg.title} message={<GeoSteps steps={msg.steps} />} {...action} />;
+  }
+  if (msg.tone !== 'ok') return (
     <div className="card flex flex-col gap-2.5">
-      <div className="text-[13px] font-bold">Ubicación GPS</div>
-      <div className="text-xs text-gray-500 leading-relaxed">Para iniciar un recorrido debes permitir el acceso a tu ubicación.</div>
+      <div className="text-[13px] font-bold">{msg.title}</div>
+      <div className="text-xs text-gray-500 leading-relaxed"><GeoSteps steps={msg.steps} /></div>
       <button type="button" className="btn btn-primary" onClick={request}>Permitir ubicación</button>
-      {permission === 'error' && <div className="text-xs text-red-600 font-semibold">No se pudo obtener la ubicación. Intenta de nuevo.</div>}
     </div>
   );
   return (
@@ -53,7 +61,11 @@ export default function DriverPanel({ trip, refresh, direction, onDirectionChang
   const dir = trip?.direction || direction;
   const start = dir === 'vuelta' ? NAMES.eafit.short : NAMES.metro.short;
   const end = dir === 'vuelta' ? NAMES.metro.short : NAMES.eafit.short;
-  const canStart = gps.permission === 'granted';
+  // Al iniciar se pide el permiso; si no se concede el recorrido no arranca y GpsCard explica como activarlo.
+  const startTrip = () => run(async () => {
+    if ((await gps.request()) !== 'granted') return;
+    await api.start(trip.id);
+  });
 
   return (
     <div className={`flex flex-col gap-3 w-full ${compact ? '' : 'h-full'}`}>
@@ -80,8 +92,7 @@ export default function DriverPanel({ trip, refresh, direction, onDirectionChang
       )}
       {status === 'waiting' && (
         <div className="flex flex-col gap-2.5">
-          <button type="button" className="btn btn-primary" disabled={busy || !canStart} title={canStart ? '' : 'Permite la ubicación para iniciar'}
-            onClick={() => run(() => api.start(trip.id))}>Iniciar recorrido</button>
+          <button type="button" className="btn btn-primary" disabled={busy} onClick={startTrip}>Iniciar recorrido</button>
           <button type="button" className="btn btn-danger" disabled={busy} onClick={() => run(() => api.cancel(trip.id))}>Cancelar recorrido</button>
         </div>
       )}
