@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    image: ${DOCKERHUB_USER:-pupigo}/pupigo-backend:${TAG:-latest}
+    image: ${DOCKERHUB_USER:-pupigo}/pupigo-backend:${TAG:-v2}
     container_name: pupigo-backend
     restart: unless-stopped
     environment:
@@ -14,6 +14,7 @@ services:
       DJANGO_DEBUG: ${DJANGO_DEBUG:-0}
       ASSISTANT_API_KEY: ${ASSISTANT_API_KEY:-}
       ASSISTANT_MODEL: ${ASSISTANT_MODEL:-}
+      PUPIGO_DEMO_PASSWORD: ${PUPIGO_DEMO_PASSWORD:-}
     volumes:
       - pupigo-data:/app/data
       - pupigo-static:/app/staticfiles
@@ -25,7 +26,8 @@ services:
       context: ./frontend
       args:
         VITE_API_URL: /api
-    image: ${DOCKERHUB_USER:-pupigo}/pupigo-frontend:${TAG:-latest}
+        VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-}
+    image: ${DOCKERHUB_USER:-pupigo}/pupigo-frontend:${TAG:-v2}
     container_name: pupigo-frontend
     restart: unless-stopped
     depends_on:
