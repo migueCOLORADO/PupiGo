@@ -1,9 +1,17 @@
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib.auth.models import Group, User
 from django.utils import timezone
 from rest_framework.test import APITestCase
 from .models import Driver, Position, Route, Trip, Vehicle
+
+
+def as_driver(client):
+    """RF #132: crear y operar recorridos exige rol conductor."""
+    user = User.objects.create_user("conductor_test")
+    user.groups.add(Group.objects.get_or_create(name="conductor")[0])
+    client.force_authenticate(user)
 
 
 class TripApiTests(APITestCase):
@@ -12,6 +20,7 @@ class TripApiTests(APITestCase):
                              destination_name="B", destination_lat=6.20, destination_lng=-75.57)
         Vehicle.objects.create(plate="X1")
         Driver.objects.create(name="D")
+        as_driver(self.client)
 
     def create(self, direction="ida"):
         r = self.client.post("/api/trips/", {"direction": direction})
@@ -57,6 +66,7 @@ class LastKnownPositionTests(APITestCase):
                              destination_name="B", destination_lat=6.20, destination_lng=-75.57)
         Vehicle.objects.create(plate="X1")
         Driver.objects.create(name="D")
+        as_driver(self.client)
         r = self.client.post("/api/trips/", {"direction": "ida"})
         self.tid = r.data["id"]
 
