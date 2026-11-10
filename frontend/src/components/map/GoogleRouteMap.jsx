@@ -1,30 +1,23 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { boundsFromPoints, clampToBounds, contains } from '../../lib/bounds';
+import { boundsFromPoints } from '../../lib/bounds';
+import { mapIndicators, markerIconUrl } from '../../lib/mapMarkers';
 import { IDA, REGRESO, toLatLngPath } from '../../lib/routePaths';
+import { publishLegend } from './legendStore';
 import { loadGoogleMaps, onGoogleMapsAuthFailure } from './loadGoogleMaps';
 import { routeZone } from './routeZone';
 import { isPositionStale, liveLabel } from './status';
 
-const COLORS = { ida: '#2563EB', regreso: '#16A34A', stale: '#9AA3B2', waiting: '#F59E0B', white: '#FFFFFF', stop: '#10192B' };
 // Trazado real por las calles (lib/routePaths.js) en formato { lat, lng }.
 const IDA_PATH = toLatLngPath(IDA);
 const REGRESO_PATH = toLatLngPath(REGRESO);
+const PATHS = { ida: IDA_PATH, regreso: REGRESO_PATH };
 
-function busPosition(trip, zone) {
-  const pos = trip?.last_position;
-  const lat = Number(pos?.lat), lng = Number(pos?.lng);
-  if (pos && Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
-    const p = { lat, lng };
-    // Si el GPS reporta fuera de la zona se muestra en el borde mas cercano (el mapa no sale de ella).
-    return contains(zone.bounds, p) ? { ...p, outside: false } : { ...clampToBounds(p, zone.bounds), outside: true };
-  }
-  if (!trip) return null;
-  // Sin lecturas GPS: igual que el SVG, el bus espera en el origen del sentido del recorrido.
-  const start = trip.direction === 'vuelta' ? zone.destination : zone.origin;
-  return { lat: start.lat, lng: start.lng, outside: false };
+// `lift` sube el icono (px) sin mover su posicion, para no tapar el punto que tiene debajo.
+function markerIcon(maps, key, color, size, lift = 0) {
+  return { url: markerIconUrl(key, color), scaledSize: new maps.Size(size, size), anchor: new maps.Point(size / 2, size / 2 + lift) };
 }
 
-export default function GoogleRouteMap({ trip, mobile = false, apiKey, onFail }) {
+export default function GoogleRouteMap({ trip, direction, mobile = false, apiKey, onFail }) {
   const divRef = useRef(null);
   const mapRef = useRef(null);
   const overlaysRef = useRef([]);
@@ -77,7 +70,17 @@ export default function GoogleRouteMap({ trip, mobile = false, apiKey, onFail })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiKey, mobile]);
 
-  // Zona delimitada, recorridos de ida y regreso y paradas.
+  // Marcadores, lineas y leyenda (lib/mapMarkers.js). Sin recorrido se usa la direccion recibida.
+  const stale = isPositionStale(trip);
+  const live = trip?.status === 'in_progress' && !stale;
+  const ind = mapIndicators({ trip, direction, station: zone.origin, bounds: zone.bounds, stale });
+  const dir = ind.direction;
+  const landmarks = ind.markers.filter((m) => m.key !== 'bus');
+  const landmarksKey = JSON.stringify(landmarks);
+  const bus = ind.markers.find((m) => m.key === 'bus');
+  const legendKey = JSON.stringify(ind.legend);
+
+  // Zona delimitada, recorridos de ida y regreso y puntos de la leyenda.
   useEffect(() => {
     const map = mapRef.current, maps = window.google?.maps;
     if (!ready || !map || !maps) return;
@@ -91,31 +94,19 @@ export default function GoogleRouteMap({ trip, mobile = false, apiKey, onFail })
         icons: [{ icon: arrow(color), offset: '12.5%', repeat: '25%' }] }
       : { map, path, strokeOpacity: 0, zIndex: 1,
         icons: [{ icon: { path: 'M 0,-1 0,1', strokeOpacity: 0.45, strokeColor: color, scale: 3 }, offset: '0', repeat: '14px' }] });
-    const vuelta = trip?.direction === 'vuelta';
-    const ida = line(IDA_PATH, COLORS.ida, !vuelta);
-    const regreso = line(REGRESO_PATH, COLORS.regreso, vuelta);
-    const stopPoints = [
-      { ...zone.origin, label: 'M' },
-      ...zone.stops.filter((s) => ![zone.origin, zone.destination].some((e) => Math.abs(e.lat - s.lat) < 1e-7 && Math.abs(e.lng - s.lng) < 1e-7)),
-      { ...zone.destination, label: 'E' },
-    ];
-    const stops = stopPoints.map((s) => new maps.Marker({
-      map, position: { lat: s.lat, lng: s.lng }, title: s.name || 'Parada', zIndex: 1,
-      label: s.label ? { text: s.label, color: COLORS.white, fontSize: '11px', fontWeight: '700' } : undefined,
-      icon: { path: maps.SymbolPath.CIRCLE, scale: s.label ? 10 : 6, fillColor: s.label ? COLORS.stop : COLORS.white, fillOpacity: 1, strokeColor: s.label ? COLORS.white : COLORS.stop, strokeWeight: 2 },
+    const lines = mapIndicators({ direction: dir }).lines.map((l) => line(PATHS[l.key], l.color, l.selected));
+    const points = JSON.parse(landmarksKey).map((m) => new maps.Marker({
+      map, position: { lat: m.lat, lng: m.lng }, title: m.title, zIndex: 5, icon: markerIcon(maps, m.key, m.color, 28),
     }));
-    overlaysRef.current = [ida, regreso, ...stops];
+    overlaysRef.current = [...lines, ...points];
     return () => {
       overlaysRef.current.forEach((o) => o.setMap(null));
       overlaysRef.current = [];
     };
-  }, [ready, zone, trip?.direction]);
+  }, [ready, zone, dir, landmarksKey]);
 
-  // Marcador del bus en su ultima posicion.
-  const stale = isPositionStale(trip);
-  const live = trip?.status === 'in_progress' && !stale;
-  const bus = busPosition(trip, zone);
-  const busLat = bus?.lat, busLng = bus?.lng, busOutside = bus?.outside;
+  // Marcador del bus: GPS si hay; sin GPS, al inicio del trazado de la direccion.
+  const busLat = bus?.lat, busLng = bus?.lng, busColor = bus?.color, busTitle = bus?.title, busLift = bus?.stackedOn ? 24 : 0;
   useEffect(() => {
     const map = mapRef.current, maps = window.google?.maps;
     if (!ready || !map || !maps) return;
@@ -124,17 +115,22 @@ export default function GoogleRouteMap({ trip, mobile = false, apiKey, onFail })
       busRef.current = null;
       return;
     }
-    const color = stale ? COLORS.stale : live ? COLORS.ida : COLORS.waiting;
-    const icon = { path: maps.SymbolPath.CIRCLE, scale: 11, fillColor: color, fillOpacity: 1, strokeColor: COLORS.white, strokeWeight: 4 };
-    const title = busOutside ? 'Pupi Bus (fuera de la zona del recorrido)' : stale ? 'Pupi Bus (última posición conocida)' : 'Pupi Bus';
+    const icon = markerIcon(maps, 'bus', busColor, 34, busLift);
     if (!busRef.current) {
-      busRef.current = new maps.Marker({ map, position: { lat: busLat, lng: busLng }, icon, title, zIndex: 10 });
+      busRef.current = new maps.Marker({ map, position: { lat: busLat, lng: busLng }, icon, title: busTitle, zIndex: 10 });
     } else {
       busRef.current.setPosition({ lat: busLat, lng: busLng });
       busRef.current.setIcon(icon);
-      busRef.current.setTitle(title);
+      busRef.current.setTitle(busTitle);
     }
-  }, [ready, busLat, busLng, busOutside, stale, live]);
+  }, [ready, busLat, busLng, busColor, busTitle, busLift]);
+
+  // La leyenda muestra solo lo que esta dibujado en este mapa.
+  useEffect(() => {
+    if (!ready) return undefined;
+    publishLegend(JSON.parse(legendKey));
+    return () => publishLegend(null);
+  }, [ready, legendKey]);
 
   return (
     <div className={mobile ? 'm-map' : 'map-wrap'} data-map-provider="google">
