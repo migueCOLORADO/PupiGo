@@ -5,6 +5,7 @@
 // La aritmetica vive en lib/carousel.js.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { centerScrollLeft, edgeZone, nearestIndex, nextIndex, prevIndex } from '../../lib/carousel';
+import FitImage from './FitImage';
 
 export const AUTOPLAY_MS = 6000;
 const DESKTOP_QUERY = '(min-width: 1024px) and (hover: hover) and (pointer: fine)';
@@ -193,16 +194,26 @@ export default function InfoCarousel({ cards, onExpand, paused = false }) {
                 aria-roledescription="diapositiva"
                 aria-label={`${i + 1} de ${total}: ${card.title}`}
                 data-active={i === active ? 'true' : 'false'}
-                className="pupi-slide relative h-[min(60vh,520px)] min-h-[200px] w-full shrink-0 snap-center overflow-hidden rounded-2xl bg-ink shadow-soft lg:h-[min(60vh,640px)]"
+                className="pupi-slide relative h-[min(72vh,624px)] min-h-[240px] w-full shrink-0 snap-center overflow-hidden rounded-2xl bg-ink shadow-soft lg:h-[min(72vh,768px)]"
                 style={contain ? { backgroundColor: card.bg } : undefined}
               >
-                <img
-                  src={card.image}
-                  alt={card.alt}
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                  draggable="false"
-                  className={`absolute select-none ${contain ? 'left-[10%] top-[7%] h-[50%] w-[80%] object-contain' : 'inset-0 h-full w-full object-cover'} ${card.whiten ? 'brightness-[1.04]' : ''}`}
-                />
+                {contain ? (
+                  // Logo e ilustracion completos, sin ampliarse mas de 1.5 veces su tamano natural.
+                  <div className="absolute left-[10%] top-[7%] flex h-[50%] w-[80%] items-center justify-center">
+                    <img
+                      src={card.image}
+                      alt={card.alt}
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      draggable="false"
+                      data-natural-w={card.natural.w}
+                      data-natural-h={card.natural.h}
+                      style={{ width: card.natural.w * 1.5, aspectRatio: `${card.natural.w} / ${card.natural.h}` }}
+                      className={`max-h-full max-w-full select-none object-contain ${card.whiten ? 'brightness-[1.04]' : ''}`}
+                    />
+                  </div>
+                ) : (
+                  <FitImage src={card.image} alt={card.alt} natural={card.natural} focal={card.focal} loading={i === 0 ? 'eager' : 'lazy'} />
+                )}
                 <div className={`pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent ${contain ? 'h-[45%]' : 'h-3/4'}`} />
                 <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-5 md:flex-row md:items-end md:justify-between md:gap-8 md:p-8 lg:p-10">
                   <div className="min-w-0 max-w-3xl text-white">

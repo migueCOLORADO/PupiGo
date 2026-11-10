@@ -7,6 +7,8 @@ import imgVision from '../../assets/landing/nuestraVision.jpg';
 
 // fit 'contain': la imagen se muestra completa y centrada sobre el color bg (logo e ilustracion).
 // whiten: aclara el fondo gris muy claro del logo (#F7F7F7) para que se funda con el blanco.
+// Fotos (sin fit): natural es su tamano en pixeles y focal su punto de interes (object-position).
+// La tarjeta y el detalle deciden cover o contain con fondo desenfocado (lib/carousel.js).
 
 export const LANDING_CARDS = [
   {
@@ -15,6 +17,7 @@ export const LANDING_CARDS = [
     image: imgQuienes,
     fit: 'contain',
     bg: '#FFFFFF',
+    natural: { w: 483, h: 138 },
     whiten: true,
     alt: 'Logo de PupiGo',
     summary: 'PupiGo nace de la comunidad EAFIT que se mueve entre la universidad y el metro, la misma que creó Caminantes y le puso nombre al Pupi móvil.',
@@ -31,6 +34,7 @@ export const LANDING_CARDS = [
     image: imgComoUsar,
     fit: 'contain',
     bg: '#F3F1EA',
+    natural: { w: 320, h: 180 },
     alt: 'Ilustración de un celular con el mapa de la ruta y el colectivo',
     summary: 'Abre PupiGo desde el enlace, sin instalar nada, y mira en el mapa dónde va el colectivo, su ruta y su estado.',
     detail: [
@@ -45,6 +49,9 @@ export const LANDING_CARDS = [
     id: 'conductores',
     title: 'Para conductores',
     image: imgConductores,
+    natural: { w: 626, h: 626 },
+    // la cara del conductor, no el torso
+    focal: '60% 18%',
     alt: 'Ilustración de un conductor al volante del colectivo',
     summary: 'El conductor gestiona el viaje y comparte su ubicación GPS desde el navegador mientras hace el recorrido.',
     detail: [
@@ -58,6 +65,8 @@ export const LANDING_CARDS = [
     id: 'vision',
     title: 'Nuestra visión',
     image: imgVision,
+    natural: { w: 1200, h: 535 },
+    focal: '55% 40%',
     alt: 'Campus de la Universidad EAFIT con estudiantes caminando entre los edificios',
     summary: 'Menos espera, más certeza: que cada estudiante sepa cuándo llega el colectivo y pueda planear su salida.',
     detail: [

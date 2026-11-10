@@ -94,3 +94,49 @@ export function edgeZone(x, width, fraction = 0.1) {
   if (x >= width - band) return 'right';
   return null;
 }
+
+function assertSize(name, size) {
+  const ok = size && [size.w, size.h].every((v) => typeof v === 'number' && Number.isFinite(v) && v > 0);
+  if (!ok) throw new RangeError(`${name} debe tener w y h finitos mayores que 0, recibido: ${JSON.stringify(size)}`);
+}
+
+// Cuantas veces difiere la proporcion de dos rectangulos (siempre >= 1).
+export function aspectDiff(a, b) {
+  assertSize('a', a);
+  assertSize('b', b);
+  const ra = a.w / a.h;
+  const rb = b.w / b.h;
+  return Math.max(ra / rb, rb / ra);
+}
+
+// Escala que aplica object-fit: cover (llenar el hueco) o contain (caber completa).
+export function fitScale(natural, box, mode) {
+  assertSize('natural', natural);
+  assertSize('box', box);
+  const sx = box.w / natural.w;
+  const sy = box.h / natural.h;
+  if (mode === 'cover') return Math.max(sx, sy);
+  if (mode === 'contain') return Math.min(sx, sy);
+  throw new TypeError(`mode debe ser 'cover' o 'contain', recibido: ${mode}`);
+}
+
+// Decide como mostrar una imagen en un hueco. 'contain' significa imagen completa sobre una copia
+// ampliada y desenfocada de si misma (estilo Apple); 'cover' llena el hueco con su punto focal.
+// Tarjeta: contain si cover tendria que ampliarla (menor resolucion que el hueco) o si la proporcion
+// difiere mas de maxAspectDiff veces.
+export function chooseFit(natural, box, { maxUpscale = 1, maxAspectDiff = 1.5 } = {}) {
+  if (!(maxUpscale > 0) || !(maxAspectDiff >= 1)) {
+    throw new RangeError('maxUpscale debe ser > 0 y maxAspectDiff >= 1');
+  }
+  const upscale = fitScale(natural, box, 'cover');
+  return upscale > maxUpscale || aspectDiff(natural, box) > maxAspectDiff ? 'contain' : 'cover';
+}
+
+// Proporcion desde la que una imagen se considera horizontal en el detalle.
+export const WIDE_RATIO = 1.3;
+
+// Detalle: horizontal arriba a todo el ancho; cuadrada o vertical a un costado.
+export function detailLayout(natural) {
+  assertSize('natural', natural);
+  return natural.w / natural.h >= WIDE_RATIO ? 'top' : 'side';
+}
