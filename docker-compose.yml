@@ -1,5 +1,5 @@
 # PupiGo: backend (Django + Gunicorn) y frontend (Nginx con el build de Vite + proxy /api).
-# Uso local:   docker compose up -d --build
+# Uso local:   docker compose up -d --build   (no requiere .env: todo tiene valor por defecto; .env.example es opcional)
 # Uso en EC2:  docker compose pull && docker compose up -d   (si las imagenes estan en Docker Hub)
 services:
   backend:
@@ -10,11 +10,11 @@ services:
     container_name: pupigo-backend
     restart: unless-stopped
     environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Define DJANGO_SECRET_KEY en el archivo .env}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-}
       DJANGO_DEBUG: ${DJANGO_DEBUG:-0}
       ASSISTANT_API_KEY: ${ASSISTANT_API_KEY:-}
       ASSISTANT_MODEL: ${ASSISTANT_MODEL:-}
-      PUPIGO_DEMO_PASSWORD: ${PUPIGO_DEMO_PASSWORD:-}
+      PUPIGO_DEMO_PASSWORD: ${PUPIGO_DEMO_PASSWORD:-PupiGo2026}
     volumes:
       - pupigo-data:/app/data
       - pupigo-static:/app/staticfiles
@@ -26,7 +26,7 @@ services:
       context: ./frontend
       args:
         VITE_API_URL: /api
-        VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-}
+        VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-AIzaSyD1ODBWGU0Ys-zElpQpjSPa58U0mDWv1Hk}
     image: ${DOCKERHUB_USER:-pupigo}/pupigo-frontend:${TAG:-v2}
     container_name: pupigo-frontend
     restart: unless-stopped
