@@ -1,11 +1,17 @@
 // UH16 #219: ventana emergente con el detalle de una diapositiva.
-// Ocupa la mayor parte de la pantalla: imagen arriba en vertical y al costado en horizontal, texto con scroll.
+// Ocupa la mayor parte de la pantalla, texto con scroll. Fotos horizontales (proporcion >= 1.3) arriba a todo
+// el ancho conservando su proporcion; cuadradas o verticales al costado con cover y punto focal (arriba en
+// pantallas verticales). El logo y la ilustracion se muestran completos sobre su color.
 // Entra con escala y fundido; cierra con el boton, con Escape y con clic fuera, con animacion de salida.
 // Mantiene el foco dentro mientras esta abierta; LandingPage lo devuelve al boton que la abrio.
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { detailLayout } from '../../lib/carousel';
+import FitImage from './FitImage';
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 const EXIT_MS = 200;
+// Al costado se permite cover mientras no amplie la foto mas de 1.5 veces.
+const SIDE_RULES = { maxUpscale: 1.5, maxAspectDiff: Infinity };
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined'
@@ -70,6 +76,7 @@ export default function InfoModal({ card, onClose }) {
   const titleId = `pupi-dialog-${card.id}`;
   const state = closing ? 'closing' : 'open';
   const contain = card.fit === 'contain';
+  const layout = contain ? 'side' : detailLayout(card.natural);
 
   return (
     <div
@@ -83,14 +90,30 @@ export default function InfoModal({ card, onClose }) {
         aria-modal="true"
         aria-labelledby={titleId}
         data-state={state}
+        data-layout={layout}
         className="pupi-dialog overflow-hidden rounded-2xl bg-white shadow-soft"
       >
-        <div className="pupi-dialog-media relative overflow-hidden bg-ink" style={contain ? { backgroundColor: card.bg } : undefined}>
-          <img
-            src={card.image}
-            alt=""
-            className={`h-full w-full ${contain ? 'object-contain p-[8%]' : 'object-cover'} ${card.whiten ? 'brightness-[1.04]' : ''}`}
-          />
+        <div
+          className="pupi-dialog-media relative overflow-hidden bg-ink"
+          style={contain ? { backgroundColor: card.bg } : layout === 'top' ? { aspectRatio: `${card.natural.w} / ${card.natural.h}` } : undefined}
+        >
+          {contain ? (
+            <img
+              src={card.image}
+              alt=""
+              data-natural-w={card.natural?.w}
+              data-natural-h={card.natural?.h}
+              className={`h-full w-full object-contain p-[8%] ${card.whiten ? 'brightness-[1.04]' : ''}`}
+            />
+          ) : (
+            <FitImage
+              src={card.image}
+              natural={card.natural}
+              focal={card.focal}
+              mode={layout === 'top' ? 'contain' : undefined}
+              rules={SIDE_RULES}
+            />
+          )}
         </div>
         <div className="pupi-dialog-body flex flex-col">
           <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 md:px-8 md:py-6">

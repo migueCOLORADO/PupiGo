@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   isValidLength, wrapIndex, clampIndex, nextIndex, prevIndex, reachableCount, indexFromScroll,
-  centerScrollLeft, nearestIndex, edgeZone,
+  centerScrollLeft, nearestIndex, edgeZone, aspectDiff, fitScale, chooseFit, detailLayout,
 } from './carousel.js';
 
 test('camino feliz: siguiente y anterior avanzan de a uno', () => {
@@ -147,5 +147,59 @@ test('edgeZone detecta la franja del 10 % de cada borde', () => {
 test('entrada invalida: edgeZone devuelve null', () => {
   for (const args of [[NaN, 100], [10, 0], [10, -5], ['10', 100], [-1, 100], [101, 100], [10, 100, 0], [10, 100, 0.6]]) {
     assert.equal(edgeZone(...args), null, `args=${JSON.stringify(args)}`);
+  }
+});
+
+test('imagenes: camino feliz de cover y contain en la tarjeta', () => {
+  // foto grande y de proporcion parecida: cover sin ampliar
+  assert.equal(chooseFit({ w: 1600, h: 900 }, { w: 1200, h: 650 }), 'cover');
+  // menor resolucion que el hueco: contain con fondo desenfocado
+  assert.equal(chooseFit({ w: 626, h: 626 }, { w: 1224, h: 648 }), 'contain');
+  // proporcion muy distinta aunque sobre resolucion: contain
+  assert.equal(chooseFit({ w: 1200, h: 535 }, { w: 328, h: 608 }), 'contain');
+  assert.equal(detailLayout({ w: 1200, h: 535 }), 'top');
+  assert.equal(detailLayout({ w: 626, h: 626 }), 'side');
+  assert.equal(fitScale({ w: 100, h: 50 }, { w: 200, h: 200 }, 'cover'), 4);
+  assert.equal(fitScale({ w: 100, h: 50 }, { w: 200, h: 200 }, 'contain'), 2);
+});
+
+test('imagenes: bordes exactos de proporcion y escala', () => {
+  assert.equal(aspectDiff({ w: 3, h: 2 }, { w: 1, h: 1 }), 1.5);
+  assert.equal(chooseFit({ w: 1500, h: 1000 }, { w: 1000, h: 1000 }), 'cover');
+  assert.equal(chooseFit({ w: 1000, h: 1000 }, { w: 1000, h: 1000 }), 'cover');
+  assert.equal(chooseFit({ w: 999, h: 999 }, { w: 1000, h: 1000 }), 'contain');
+  assert.equal(chooseFit({ w: 626, h: 626 }, { w: 528, h: 792 }, { maxUpscale: 1.5, maxAspectDiff: Infinity }), 'cover');
+  assert.equal(chooseFit({ w: 300, h: 300 }, { w: 528, h: 792 }, { maxUpscale: 1.5, maxAspectDiff: Infinity }), 'contain');
+  assert.equal(detailLayout({ w: 130, h: 100 }), 'top');
+  assert.equal(detailLayout({ w: 129, h: 100 }), 'side');
+});
+
+test('imagenes: entradas invalidas lanzan error', () => {
+  for (const bad of [null, {}, { w: 0, h: 1 }, { w: 1, h: -1 }, { w: NaN, h: 1 }, { w: '1', h: 1 }]) {
+    assert.throws(() => chooseFit(bad, { w: 1, h: 1 }), RangeError);
+    assert.throws(() => chooseFit({ w: 1, h: 1 }, bad), RangeError);
+    assert.throws(() => detailLayout(bad), RangeError);
+  }
+  assert.throws(() => fitScale({ w: 1, h: 1 }, { w: 1, h: 1 }, 'fill'), TypeError);
+  assert.throws(() => chooseFit({ w: 1, h: 1 }, { w: 1, h: 1 }, { maxUpscale: 0 }), RangeError);
+  assert.throws(() => chooseFit({ w: 1, h: 1 }, { w: 1, h: 1 }, { maxAspectDiff: 0.5 }), RangeError);
+});
+
+test('imagenes Monte Carlo: cover nunca amplia mas de lo permitido', () => {
+  let a = 99;
+  const rand = () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  for (let i = 0; i < 1000; i += 1) {
+    const nat = { w: 50 + rand() * 3000, h: 50 + rand() * 3000 };
+    const box = { w: 50 + rand() * 2000, h: 50 + rand() * 2000 };
+    if (chooseFit(nat, box) === 'cover') {
+      assert.ok(fitScale(nat, box, 'cover') <= 1 + 1e-12);
+      assert.ok(aspectDiff(nat, box) <= 1.5 + 1e-12);
+    }
   }
 });

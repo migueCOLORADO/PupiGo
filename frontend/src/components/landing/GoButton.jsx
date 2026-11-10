@@ -1,14 +1,17 @@
 // UH16 #219: boton circular GO de vidrio esmerilado.
 // Hover con puntero fino: el anillo se llena en sentido horario (rojo, naranja, verde) y al salir se vacia
-// desde donde iba. Clic o toque: pulsacion corta y navegacion a /auth0. La logica vive en lib/goProgress.js.
+// desde donde iba. Tambien con prefers-reduced-motion: es una animacion pequena y no vestibular.
+// Clic o toque: anillos que salen del boton, alejamiento del encabezado (onLaunch avisa la fase) y
+// navegacion a /auth0 con state.fromGo. Con prefers-reduced-motion: fundido de 200 ms y navegacion.
+// La logica vive en lib/goProgress.js.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { colorAt, colorStage, isSettled, ringVisible, step } from '../../lib/goProgress';
+import { colorAt, colorStage, isSettled, launchPlan, ringVisible, step } from '../../lib/goProgress';
 
 export const GO_TARGET = '/auth0';
-const PRESS_MS = 260;
 const R = 46;
 const CIRCUMFERENCE = 2 * Math.PI * R;
+const SIZE = 'clamp(150px, 14vw, 210px)';
 
 function matches(query) {
   return typeof window !== 'undefined'
@@ -16,17 +19,16 @@ function matches(query) {
     && window.matchMedia(query).matches;
 }
 
-export default function GoButton({ to = GO_TARGET }) {
+export default function GoButton({ to = GO_TARGET, onLaunch }) {
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const [hovering, setHovering] = useState(false);
-  const [pressing, setPressing] = useState(false);
+  const [phase, setPhase] = useState('idle');
   const progressRef = useRef(0);
   const hoverRef = useRef(false);
   const frameRef = useRef(0);
   const lastRef = useRef(0);
-  const timerRef = useRef(0);
-  const reduced = matches('(prefers-reduced-motion: reduce)');
+  const timersRef = useRef([]);
 
   const tick = useCallback(function loop(now) {
     const dt = lastRef.current ? Math.min(now - lastRef.current, 100) : 0;
@@ -48,9 +50,12 @@ export default function GoButton({ to = GO_TARGET }) {
     frameRef.current = requestAnimationFrame(tick);
   }, [tick]);
 
-  useEffect(() => () => {
-    cancelAnimationFrame(frameRef.current);
-    clearTimeout(timerRef.current);
+  useEffect(() => {
+    const timers = timersRef;
+    return () => {
+      cancelAnimationFrame(frameRef.current);
+      timers.current.forEach(clearTimeout);
+    };
   }, []);
 
   const setHover = (value) => {
@@ -60,7 +65,7 @@ export default function GoButton({ to = GO_TARGET }) {
   };
 
   const onPointerEnter = (e) => {
-    if (reduced || e.pointerType !== 'mouse') return;
+    if (e.pointerType !== 'mouse') return;
     if (!matches('(hover: hover) and (pointer: fine)')) return;
     setHover(true);
   };
@@ -70,17 +75,23 @@ export default function GoButton({ to = GO_TARGET }) {
   };
 
   const go = () => {
-    if (pressing) return;
-    if (reduced) {
-      navigate(to);
-      return;
-    }
-    setPressing(true);
-    timerRef.current = setTimeout(() => navigate(to), PRESS_MS);
+    if (phase !== 'idle') return;
+    const plan = launchPlan(matches('(prefers-reduced-motion: reduce)'));
+    timersRef.current = plan
+      .filter((p) => p.phase !== 'enter')
+      .map((p) => setTimeout(() => {
+        if (p.phase === 'navigate') {
+          navigate(to, { state: { fromGo: true } });
+          return;
+        }
+        setPhase(p.phase);
+        onLaunch?.(p.phase);
+      }, p.at));
   };
 
-  const visible = !reduced && ringVisible(progress, hovering);
+  const visible = ringVisible(progress, hovering);
   const color = colorAt(progress);
+  const waves = phase === 'rings' || phase === 'zoom';
 
   return (
     <button
@@ -89,11 +100,15 @@ export default function GoButton({ to = GO_TARGET }) {
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
       aria-label="GO, entrar a PupiGo"
-      aria-busy={pressing}
-      data-phase={pressing ? 'pressing' : 'idle'}
+      aria-busy={phase !== 'idle'}
+      data-phase={phase}
       data-progress={progress.toFixed(3)}
-      className="pupi-go relative grid h-28 w-28 place-items-center rounded-full text-white focus:outline-none focus-visible:ring-4 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:h-32 md:w-32"
+      style={{ width: SIZE, height: SIZE }}
+      className="pupi-go relative grid shrink-0 place-items-center rounded-full text-white focus:outline-none focus-visible:ring-4 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
     >
+      {waves && [0, 1, 2].map((i) => (
+        <span key={i} aria-hidden="true" data-wave={i} className="pupi-go-wave" style={{ animationDelay: `${i * 40}ms` }} />
+      ))}
       <svg viewBox="0 0 104 104" className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
         <circle cx="52" cy="52" r={R} fill="none" stroke="#FFFFFF" strokeOpacity="0.55" strokeWidth="1.5" />
         <circle
@@ -112,7 +127,7 @@ export default function GoButton({ to = GO_TARGET }) {
           transform="rotate(-90 52 52)"
         />
       </svg>
-      <span aria-hidden="true" className="text-4xl font-black tracking-wider md:text-5xl">GO</span>
+      <span aria-hidden="true" className="font-black tracking-wider" style={{ fontSize: 'clamp(2.6rem, 4.2vw, 4rem)' }}>GO</span>
     </button>
   );
 }

@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   FILL_MS, DRAIN_RATIO, GO_RED, GO_ORANGE, GO_GREEN,
-  clamp01, step, isSettled, ringVisible, colorAt, colorStage,
+  clamp01, step, isSettled, ringVisible, colorAt, colorStage, LAUNCH_MS, launchPlan, launchTotal,
 } from './goProgress.js';
 
 const near = (a, b, eps = 1e-9) => assert.ok(Math.abs(a - b) <= eps, `${a} no es ~${b}`);
@@ -122,4 +122,26 @@ test('Monte Carlo: 600 secuencias aleatorias de entrar y salir del hover', () =>
   const [r0, g0] = hexToRgb(colorAt(0));
   assert.ok(r0 > g0 * 2);
   assert.equal(colorAt(1), GO_GREEN);
+});
+
+test('transicion GO: plan completo dura 1.6 s y navega tras anillos y alejamiento', () => {
+  const plan = launchPlan(false);
+  assert.deepEqual(plan.map((p) => p.phase), ['rings', 'zoom', 'navigate', 'enter']);
+  assert.equal(plan.find((p) => p.phase === 'navigate').at, LAUNCH_MS.rings + LAUNCH_MS.zoom);
+  assert.equal(launchTotal(plan), 1600);
+});
+
+test('transicion GO con movimiento reducido: fundido de 200 ms y navegacion', () => {
+  const plan = launchPlan(true);
+  assert.deepEqual(plan.map((p) => p.phase), ['fade', 'navigate']);
+  assert.equal(launchTotal(plan), 200);
+  assert.ok(launchTotal(plan) < 500);
+});
+
+test('transicion GO: entradas invalidas lanzan error', () => {
+  for (const bad of ['si', 1, null, undefined]) assert.throws(() => launchPlan(bad), TypeError);
+  assert.throws(() => launchPlan(false, { rings: 0, zoom: 1, enter: 1, fade: 1 }), RangeError);
+  assert.throws(() => launchPlan(true, null), RangeError);
+  assert.throws(() => launchTotal([]), RangeError);
+  assert.throws(() => launchTotal('plan'), RangeError);
 });
