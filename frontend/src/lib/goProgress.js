@@ -77,3 +77,36 @@ export function colorStage(progress) {
   if (p < 0.9) return 'naranja';
   return 'verde';
 }
+
+// Transicion al tocar GO. Sin reduccion de movimiento: anillos que salen del boton, alejamiento del
+// encabezado con velo a negro, navegacion y entrada de /auth0 desde negro (1.6 s en total).
+// Con prefers-reduced-motion: un fundido corto y la navegacion.
+export const LAUNCH_MS = Object.freeze({ rings: 400, zoom: 500, enter: 700, fade: 200 });
+
+// Lista de fases con el instante de inicio (at) y la duracion (ms) de cada una.
+// La fase 'navigate' marca cuando se cambia de ruta.
+export function launchPlan(reduced, ms = LAUNCH_MS) {
+  if (typeof reduced !== 'boolean') {
+    throw new TypeError(`reduced debe ser booleano, recibido: ${reduced}`);
+  }
+  for (const key of ['rings', 'zoom', 'enter', 'fade']) assertPositive(`ms.${key}`, ms?.[key]);
+  if (reduced) {
+    return [
+      { phase: 'fade', at: 0, ms: ms.fade },
+      { phase: 'navigate', at: ms.fade, ms: 0 },
+    ];
+  }
+  const nav = ms.rings + ms.zoom;
+  return [
+    { phase: 'rings', at: 0, ms: ms.rings },
+    { phase: 'zoom', at: ms.rings, ms: ms.zoom },
+    { phase: 'navigate', at: nav, ms: 0 },
+    { phase: 'enter', at: nav, ms: ms.enter },
+  ];
+}
+
+// Duracion total de un plan: el fin de la fase que termina mas tarde.
+export function launchTotal(plan) {
+  if (!Array.isArray(plan) || plan.length === 0) throw new RangeError('plan debe ser una lista no vacia');
+  return Math.max(...plan.map((p) => p.at + p.ms));
+}
