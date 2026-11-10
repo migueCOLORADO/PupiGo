@@ -87,7 +87,7 @@ export default function AppShell({ trip, direction, onDirectionChange, canToggle
     return (
       <div className="pupi-app m-app">
         <MobileTopBar {...bar} />
-        <RouteMap mobile trip={trip} />
+        <RouteMap mobile trip={trip} direction={direction} />
         <MobileSheet>{panel(true, true)}</MobileSheet>
       </div>
     );
@@ -96,7 +96,7 @@ export default function AppShell({ trip, direction, onDirectionChange, canToggle
     return (
       <div className="tablet-app pupi-app">
         <TopBar {...bar} />
-        <div className="tablet-map-wrap"><RouteMap trip={trip} /><Legend /></div>
+        <div className="tablet-map-wrap"><RouteMap trip={trip} direction={direction} /><Legend /></div>
         <div className="tablet-infobar">{panel(true, false)}</div>
       </div>
     );
@@ -105,7 +105,7 @@ export default function AppShell({ trip, direction, onDirectionChange, canToggle
     <div className="app pupi-app">
       <TopBar {...bar} />
       <div className="app-body">
-        <div className="map-col"><RouteMap trip={trip} /><Legend /></div>
+        <div className="map-col"><RouteMap trip={trip} direction={direction} /><Legend /></div>
         <div className="side-col">{panel(false, false)}</div>
       </div>
     </div>
